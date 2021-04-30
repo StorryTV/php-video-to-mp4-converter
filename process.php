@@ -101,8 +101,8 @@ if(isset($_POST['submit'])) {
         ?>
       </h2>
     </hgroup>
-    <video autoplay loop muted poster="http://via.placeholder.com/250x300">
-      <source src="<?= $_SERVER['DOCUMENT_ROOT'] . $video_mp4; ?>" type="video/mp4">
+    <video autoplay loop muted poster="">
+      <source src="<?= '/converted/' . $video_mp4; ?>" type="video/mp4">
     </video>
   </div>
 </body>
