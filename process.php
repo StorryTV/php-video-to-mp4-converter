@@ -3,7 +3,7 @@ $uploads_dir = 'original/';
 $file_name = basename($_FILES['file']['name']);
 $output_name = explode('.', $file_name)[0];
 $uploaded_file = $uploads_dir . $file_name;
-$convert_status = ['mp4' => 0, 'webm' => 0];
+$convert_status = ['mp4' => 0];
 
 if(isset($_POST['submit'])) {
   if(move_uploaded_file($_FILES['file']['tmp_name'], $uploaded_file)) {
@@ -17,13 +17,6 @@ if(isset($_POST['submit'])) {
 
     // Debug
     // echo '<pre>' . print_r($output, 1) . ' </pre>';
-
-    // WebM
-    $video_webm = $output_name . '.webm';
-    exec($ffmpeg . ' -i "' . $uploaded_file . '" -c:v libvpx -c:a libvorbis -an "./converted/' . $video_webm . '" -y 1>convert.txt 2>&1', $output, $convert_status['webm']);
-
-    // Debug
-    // echo '<pre>' . print_r($output, 1) . ' </pre>';
   }
 }
 ?>
@@ -34,7 +27,7 @@ if(isset($_POST['submit'])) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+  <title>Video to MP4 Converter</title>
   <style>
     body {
       padding: 0;
@@ -105,14 +98,11 @@ if(isset($_POST['submit'])) {
       <h2>
         <?php 
         echo ($convert_status['mp4'] != 0) ? 'MP4: <span class="fail">Fail</span>' : 'MP4: <span class="success">Success</span>';
-        echo ' - ';
-        echo ($convert_status['webm'] != 0) ? 'WebM: <span class="fail">Fail</span>' : 'WebM: <span class="success">Success</span>';
         ?>
       </h2>
     </hgroup>
     <video autoplay loop muted poster="http://via.placeholder.com/250x300">
-      <source src="./converted/<?= $video_mp4; ?>" type="video/mp4">;   
-      <source src="./converted/<?= $video_webm; ?>" type="video/webm">
+      <source src="./converted/<?= $video_mp4; ?>" type="video/mp4">
     </video>
   </div>
 </body>
