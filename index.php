@@ -1,5 +1,6 @@
 <?php
 
+require 'vendor/autoload.php';
 use rannmann\PhpIpfsApi\IPFS;
 
 $ipfs = new IPFS("ipfs.infura.io", 443, 5001);
