@@ -1,27 +1,22 @@
-# Converting video files to HTML video compatible formats
+# Converting video files to MP4
 
-This simple script uploads a video file and converts it with **ffmpeg** to **mp4** and **webm** format.  
-There's no error handling. This is just a rough initial test to solve a headache of mine.
+This simple script uploads a video file and converts it with **ffmpeg** to **mp4** format.
 
 Note that converting to webm is painfully slow! Just give it some time and make a nice progress bar...
 
 Cheers!
 
+
 ## Requirements
 
-You need **ffmpeg** and also a couple of addons to be able to convert to webm.
+You need **ffmpeg** to be able to convert.
 
 On Mac OS with Homebrew:
 
 ```bash
-brew install ffmpeg --with-libvpx --with-libvorbis --with-fdk-aacc
+brew install ffmpeg
 ```
 
-If you already have ffmpeg installed and need the addons, just reinstall ffmpeg with the addons.
-
-```bash
-brew reinstall ffmpeg --with-libvpx --with-libvorbis --with-fdk-aacc
-```
 
 ## Installation
 
