@@ -17,7 +17,7 @@ if (!empty($_POST)) {
 	$filepath = '/converted/' . $video_mp4;
 	$hash = $ipfs->add($filepath);
 	$status = ($convert_status['mp4'] === 0) ? 'failed' : 'success';
-	$arr = array('convertedvideo' => $filepath, 'filename' => $file_name, 'status' => $status);
+	$arr = array('convertedvideo' => $filepath, 'status' => $status);
 	
 	header("Content-type: application/json; charset=utf-8");
 	
