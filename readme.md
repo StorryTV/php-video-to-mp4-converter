@@ -8,10 +8,10 @@ Cheers!
 ## Requirements
 
 
-You need **php-ipfs-api** to get your converted mp4 video from ipfs.
+You need **ipfs-php** to get your converted mp4 video from ipfs.
 
 ```bash
-composer require rannmann/php-ipfs-api
+composer require nebulaprotocol/ipfs-php
 composer install
 ```
 
