@@ -2,6 +2,8 @@
 
 use rannmann\PhpIpfsApi\IPFS;
 
+$ipfs = new IPFS("ipfs.infura.io", 443, 5001);
+
 $uploads_dir = 'original/';
 $file_name = basename($_FILES['file']['name']);
 $output_name = explode('.', $file_name)[0];
@@ -17,8 +19,7 @@ if(isset($_POST['submit'])) {
 		exec($ffmpeg . ' -i "' . $uploaded_file . '" -c:v libx264 "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
 	}
 	$filepath = '/converted/' . $video_mp4;
-	$ipfs = new IPFS("ipfs.infura.io", 443, 5001);
-	$hash = $ipfs->addFromPath($filepath);
+	$hash = $ipfs->addFromUrl($filepath);
 	$status = ($convert_status['mp4'] === 0) ? 'failed' : 'success';
 	$arr = array('convertedvideo' => 'https://ipfs.infura.io/' . $hash . '?filename=' . $video_mp4, 'hash' => $hash, 'filename' => $video_mp4, 'status' => $status);
 	
