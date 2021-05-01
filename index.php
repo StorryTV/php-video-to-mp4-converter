@@ -44,13 +44,15 @@ if(isset($_POST['upload_form'])) {
 			input[type="file"]:hover {background-color:rgba(0,0,0,0.15);}
 			input[type="submit"] {font-size:28px;border:none;border-radius:5px;background-image:linear-gradient(#7100e2,#58427b,#271212);color:#fff;box-shadow:2px 2px 5px #777;}
 			input[type="submit"]:hover {background-image:linear-gradient(#6f00de,#5c4582,#231010);box-shadow:2px 2px 8px #777;}
+			#bararea {width:100%;height:10px;border:1px solid #7100e2;border-radius:3px;margin-top:20px;background-color:#fff;}
+			#bar {width:1%;margin:0px 0;height:8px;background-color:#03d000;transition-duration:0.5s;}
 		</style>
 	</head>
 	<body>
 		<form id="form" action="" method="post" enctype="multipart/form-data">
 			<input type="file" name="file" accept="video/*" required>
 			<input type="hidden" name="upload_form" value="true" required>
-			<input type="submit" name="submit" value="Convert">
+			<input type="submit" name="submit" value="Convert to MP4">
 		</form>
 		<div id="bararea">
 			<div id="bar"></div>
@@ -88,7 +90,8 @@ if(isset($_POST['upload_form'])) {
 				complete: function(xhr) {
 					let response = JSON.parse(xhr.responseText);
 					$('#percent').css('display', 'none');
-					status.html('<a id="download" href="#" download="' + response.convertedvideo + '"><button>Download</button></a>');
+					status.html('<a id="download" href="' + response.convertedvideo + '" target="_blank"><button>Download Video</button></a>');
+					$('#download').click();
 				},
 				error: function(xhr) {
 					status.html('Something went wrong: ' + (xhr.responseText || 'unknown error'));
@@ -96,7 +99,6 @@ if(isset($_POST['upload_form'])) {
 			});
 			
 			$('input[name=file]').on('change', function() {
-				$('input[type=submit]').css('display', 'none');
 				if (this.files[0].size > 104857600) {
 					alert('File is too big! Max filesize is 100MB');
 					this.value = '';
