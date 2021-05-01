@@ -1,33 +1,22 @@
 {
-  "name": "rannmann/php-ipfs-api",
-  "type": "library",
-  "description": "A client library for the IPFS API",
-  "keywords": ["ipfs"],
-  "homepage": "https://github.com/rannmann/php-ipfs-api",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Vincent Cloutier",
-      "email": "vincent@cloutier.co",
-      "homepage": "http://vincent.cloutier.co",
-      "role": "Developer"
-    },
-    {
-      "name": "Jake Forrester",
-      "role": "Developer"
-    }
-  ],
+  "name": "nebulaprotocol/ipfs-php",
+  "description": "IPFS library in PHP",
+  "version": "1.0.0",
   "require": {
-    "php": ">=7.3",
-    "ext-curl": "*",
-    "ext-json": "*"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "5.*"
+    "php": ">=7.1",
+    "guzzlehttp/guzzle": "^6.3.0",
+    "ext-curl": "*"
   },
   "autoload": {
     "psr-4": {
-      "rannmann\\PhpIpfsApi\\": "src/"
+      "": "src/"
     }
-  }
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Cesar Rodriguez",
+      "email": "kesarr+ipfs@gmail.com"
+    }
+  ]
 }
