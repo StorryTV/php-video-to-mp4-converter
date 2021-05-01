@@ -105,6 +105,7 @@ if(isset($_POST['1'])) {
 </html>
 
 <?php
+	exit();
 } else {
 	http_response_code(405);
 	exit();
