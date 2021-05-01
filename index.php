@@ -77,6 +77,7 @@ if(isset($_POST['submit'])) {
 				},
 				complete: function(xhr) {
 					let response = JSON.parse(xhr.responseText);
+					$('#percent').css('display', 'none');
 					status.html('<a id="download" href="#" download="' + response.convertedvideo + '"><button>Download</button></a>');
 				},
 				error: function(xhr) {
