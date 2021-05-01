@@ -44,8 +44,10 @@ if(isset($_POST['upload_form'])) {
 			input[type="file"]:hover {background-color:rgba(0,0,0,0.15);}
 			input[type="submit"] {font-size:28px;border:none;border-radius:5px;background-image:linear-gradient(#7100e2,#58427b,#271212);color:#fff;box-shadow:2px 2px 5px #777;}
 			input[type="submit"]:hover {background-image:linear-gradient(#6f00de,#5c4582,#231010);box-shadow:2px 2px 8px #777;}
+			#percent {font-size:22px;}
 			#bararea {width:100%;height:10px;border:1px solid #7100e2;border-radius:3px;margin-top:20px;background-color:#fff;}
 			#bar {width:1%;margin:0px 0;height:8px;background-color:#03d000;transition-duration:0.5s;}
+			#status, #percent {width:100%;text-align:center;}
 		</style>
 	</head>
 	<body>
