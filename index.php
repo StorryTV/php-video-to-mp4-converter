@@ -84,7 +84,7 @@ if (!empty($_POST)) {
 					status.html('<a id="download" href="#" download="' + response.convertedvideo + '"><button>Download</button></a>');
 				},
 				error: function(xhr) {
-					status.html('Something went wrong: ' + (xhr.responseText || 'Unkown Error'));
+					status.html('Something went wrong: ' + xhr.responseText);
 				}
 			});
 			
