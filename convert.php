@@ -18,13 +18,6 @@ if(isset($_POST['submit'])) {
 ob_clean();
 $data = '{"convertedvideo":"/converted/' . $video_mp4 . "}';
 $json = json_encode($data);
-if ($json === false) {
-  $json = json_encode(["jsonError" => json_last_error_msg()]);
-  if ($json === false) {
-    $json = '{"jsonError":"unknown"}';
-  }
-  http_response_code(500);
-}
   
 header("Content-type: application/json; charset=utf-8");
 echo $json;
