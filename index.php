@@ -48,7 +48,7 @@
 			complete: function(xhr) {
 				let response = JSON.parse(xhr.responseText);
 				$('#percent').after('<br><video id="checkvideo" style="margin-top:25px;margin-bottom:25px;max-width:500px;border-radius:10px;border:1px solid #7100e2;cursor:pointer;" title="Click to play video" preload="auto"><source id="convertedvideo" src="' + response + '" type="video/mp4"></source></video>');
-				status.html('<a id="download" href="#" download="' + response + '"><button>Download</button></a>');
+				status.html('<a id="download" href="#" download="' + response.convertedvideo + '"><button>Download</button></a>');
 			},
 			error: function(xhr) {
 				status.html('Something went wrong: ' + xhr.responseText);
