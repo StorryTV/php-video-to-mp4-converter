@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="https://cf-ipfs.com/ipfs/QmNrhsrwDMtz181A4JkPeasNiipZnZuL7nwck5eWgD9o1V/bootstrap.min.css?filename=bootstrap.min.css">
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js" integrity="sha512-YUkaLm+KJ5lQXDBdqBqk7EVhJAdxRnVdT2vtCzwPHSweCzyMgYV/tgGF4/dCyqtCC2eCphz0lRQgatGVdfR0ww==" crossorigin="anonymous"></script>
-<meta http-equiv="X-XSS-Protection" content="1">
+<!--<meta http-equiv="X-XSS-Protection" content="1">-->
 <form id="form" action="convert.php" method="post" enctype="multipart/form-data">
 	<input type="file" name="file">
 	<input type="submit" name="submit" value="Convert">
