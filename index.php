@@ -7,7 +7,7 @@ $uploaded_file = $uploads_dir . $file_name;
 $convert_status = ['mp4' => 0];
 
 // if(isset($_POST['submit'])) {
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	if(move_uploaded_file($_FILES['file']['tmp_name'], $uploaded_file)) {
 		// Make sure to get the correct path to ffmpeg
 		// Run $ where ffmpeg to get the path
