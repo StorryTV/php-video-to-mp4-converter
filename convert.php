@@ -13,7 +13,6 @@ if(isset($_POST['submit'])) {
     $video_mp4 = $output_name . '.mp4';
     exec($ffmpeg . ' -i "' . $uploaded_file . '" -c:v libx264 -an "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
     
-    ob_clean();
     $filepath = '/converted/' . $video_mp4;
     $status = ($convert_status['mp4'] != 0) ? 'failed' : 'success';
     $arr = array('convertedvideo' => $filepath, 'status' => $status);
