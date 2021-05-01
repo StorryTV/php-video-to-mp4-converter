@@ -21,10 +21,17 @@ On Ubuntu:
 apt install ffmpeg
 ```
 
+You need **php-ipfs-api** to get your converted mp4 video from ipfs.
+
+```bash
+composer require rannmann/php-ipfs-api
+composer install
+```
+
 
 ## Installation
 
-No installation besides ffmpeg needed. Just make sure you have the right file permission on the **original** and **converted** folders.
+No installation besides the above needed. Just make sure you have the right file permission on the **original** and **converted** folders.
 
 ```bash
 sudo chmod -R 775 original converted
