@@ -1,19 +1,11 @@
 # Converting video files to MP4
 
-This simple script uploads a video file and converts it with **ffmpeg** to **mp4** format and then stores it on IPFS to download it from.
+This simple script uploads a video file and converts it with **ffmpeg** to **mp4** format.
 
 Cheers!
 
 
 ## Requirements
-
-
-You need **ipfs-php** to get your converted mp4 video from ipfs.
-
-```bash
-composer require nebulaprotocol/ipfs-php
-composer install
-```
 
 
 You need **ffmpeg** to be able to convert.
