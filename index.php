@@ -1,6 +1,6 @@
 <?php
 
-if(isset($_POST['1'])) {
+if(isset($_POST['upload_form'])) {
 	$uploads_dir = 'original/';
 	$file_name = basename($_FILES['file']['name']);
 	$output_name = explode('.', $file_name)[0];
@@ -42,9 +42,9 @@ if(isset($_POST['1'])) {
 	</head>
 	<body>
 		<form id="form" action="" method="post" enctype="multipart/form-data">
-	<input type="file" name="file" accept="video/*" required>
-			<input type="hidden" name="1" value="1" required>
-	<input type="submit" name="submit" value="Convert">
+			<input type="file" name="file" accept="video/*" required>
+			<input type="hidden" name="upload_form" value="true" required>
+			<input type="submit" name="submit" value="Convert">
 		</form>
 		<div id="bararea">
 			<div id="bar"></div>
