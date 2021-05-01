@@ -1,8 +1,10 @@
 <?php
 
-require 'vendor/autoload.php';
+use IPFSPHP\IPFS;
 
-$ipfs = new IPFS("ipfs.infura.io", 443, 5001);
+include 'vendor/autoload.php';
+
+$ipfs = new IPFS('127.0.0.1', 8080, 5001);
 
 $uploads_dir = 'original/';
 $file_name = basename($_FILES['file']['name']);
@@ -19,7 +21,7 @@ if(isset($_POST['submit'])) {
 		exec($ffmpeg . ' -i "' . $uploaded_file . '" -c:v libx264 "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
 	}
 	$filepath = '/converted/' . $video_mp4;
-	$hash = $ipfs->addFromUrl($_SERVER['HTTP_HOST'] . $filepath);
+	$hash = $ipfs->add($filepath);
 	$status = ($convert_status['mp4'] === 0) ? 'failed' : 'success';
 	$arr = array('convertedvideo' => 'https://ipfs.infura.io/' . $hash . '?filename=' . $video_mp4, 'hash' => $hash, 'filename' => $video_mp4, 'status' => $status);
 	
