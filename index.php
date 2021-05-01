@@ -39,7 +39,7 @@ if(isset($_POST['submit'])) {
 		<meta http-equiv="X-XSS-Protection" content="1">
 	</head>
 	<body>
-		<form id="form" action="convert.php" method="post" enctype="multipart/form-data">
+		<form id="form" action="" method="post" enctype="multipart/form-data">
 	<input type="file" name="file">
 	<input type="submit" name="submit" value="Convert">
 		</form>
