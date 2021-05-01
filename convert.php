@@ -16,7 +16,8 @@ if(isset($_POST['submit'])) {
 }
 
 ob_clean();
-$data = '{"convertedvideo":"/converted/' . $video_mp4 . "}';
+$filepath = '/converted/' . $video_mp4;
+$data = '{"convertedvideo":"'$filepath'"}';
   
 header("Content-type: application/json; charset=utf-8");
 echo $data;
