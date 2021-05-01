@@ -1,6 +1,6 @@
 # Converting video files to MP4
 
-This simple script uploads a video file and converts it with **ffmpeg** to **mp4** format and then stores it on IPFS for you to be able to download it.
+This simple script uploads a video file and converts it with **ffmpeg** to **mp4** format and then stores it on IPFS to download it from.
 
 Cheers!
 
