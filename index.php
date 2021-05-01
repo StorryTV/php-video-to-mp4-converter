@@ -42,6 +42,8 @@ if(isset($_POST['upload_form'])) {
 		<style type="text/css">
 			input[type="file"] {width:100%;height:200px;padding:80px 10vw;font-size:28px;background-color:rgba(0,0,0,0.1);border:2px dashed rgba(0,0,0,0.2);border-radius:10px;cursor:pointer;}
 			input[type="file"]:hover {background-color:rgba(0,0,0,0.15);}
+			input[type="submit"] {font-size:28px;border:none;border-radius:5px;background-image:linear-gradient(#7100e2,#58427b,#271212);color:#fff;box-shadow:2px 2px 5px #777;}
+			input[type="submit"]:hover {background-image:linear-gradient(#6f00de,#5c4582,#231010);box-shadow:2px 2px 8px #777;}
 		</style>
 	</head>
 	<body>
