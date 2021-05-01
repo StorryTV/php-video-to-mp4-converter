@@ -11,7 +11,7 @@ if(isset($_POST['submit'])) {
 		// Run $ where ffmpeg to get the path
 		$ffmpeg = '/usr/bin/ffmpeg';
 		$video_mp4 = $output_name . '.mp4';
-		exec($ffmpeg . ' -i "' . $uploaded_file . '" -c:v libx264 "./converted/' . $video_mp4 . ' -hide_banner" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
+		exec($ffmpeg . ' -i "' . $uploaded_file . '" -c:v libx264 "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
 	}
 	$filepath = '/converted/' . $video_mp4;
 	$status = ($convert_status['mp4'] === 0) ? 'failed' : 'success';
