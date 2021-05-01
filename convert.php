@@ -17,11 +17,11 @@ if(isset($_POST['submit'])) {
 
 ob_clean();
 $filepath = '/converted/' . $video_mp4;
-$data = '{"convertedvideo":"' . $filepath . '"}';
+$status = ($convert_status['mp4'] != 0) ? 'failed' : 'success';
+$arr = array('convertedvideo' => $filepath, 'status' => $status);
   
 header("Content-type: application/json; charset=utf-8");
-echo $data;
-echo ($convert_status['mp4'] != 0) ? '{"status":"failed"}' : '{"status":"success"}';
+echo json_encode($arr);
 
 exit();
 ?>
