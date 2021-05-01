@@ -17,6 +17,12 @@ On Mac OS with Homebrew:
 brew install ffmpeg
 ```
 
+On Ubuntu:
+
+```bash
+apt install ffmpeg
+```
+
 
 ## Installation
 
