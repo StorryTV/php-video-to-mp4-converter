@@ -9,11 +9,11 @@ if(isset($_POST['submit'])) {
   if(move_uploaded_file($_FILES['file']['tmp_name'], $uploaded_file)) {
     // Make sure to get the correct path to ffmpeg
     // Run $ where ffmpeg to get the path
-    $ffmpeg = '/usr/local/bin/ffmpeg';
+    $ffmpeg = '/usr/bin/ffmpeg';
     
     // MP4
     $video_mp4 = $output_name . '.mp4';
-    exec($ffmpeg . ' -i "' . $uploaded_file . '" -c:v libx264 -an "/var/www/vhosts/storry.tv/convert.storry.tv/converted/' . $video_mp4 . '" -y 1>convert.txt 2>&1', $output, $convert_status['mp4']);
+    exec($ffmpeg . ' -i "' . $uploaded_file . '" -c:v libx264 -an "./converted/' . $video_mp4 . '" -y 1>convert.txt 2>&1', $output, $convert_status['mp4']);
 
     // Debug
     // echo '<pre>' . print_r($output, 1) . ' </pre>';
