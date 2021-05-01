@@ -1,11 +1,5 @@
 <?php
 
-use IPFSPHP\IPFS;
-
-include 'vendor/autoload.php';
-
-$ipfs = new IPFS('127.0.0.1', 8080, 5001);
-
 $uploads_dir = 'original/';
 $file_name = basename($_FILES['file']['name']);
 $output_name = explode('.', $file_name)[0];
@@ -23,7 +17,7 @@ if(isset($_POST['submit'])) {
 	$filepath = '/converted/' . $video_mp4;
 	$hash = $ipfs->add($filepath);
 	$status = ($convert_status['mp4'] === 0) ? 'failed' : 'success';
-	$arr = array('convertedvideo' => 'https://ipfs.infura.io/' . $hash . '?filename=' . $video_mp4, 'hash' => $hash, 'filename' => $video_mp4, 'status' => $status);
+	$arr = array('convertedvideo' => $filepath, 'filename' => $file_name, 'status' => $status);
 	
 	header("Content-type: application/json; charset=utf-8");
 	
@@ -90,7 +84,7 @@ if(isset($_POST['submit'])) {
 					status.html('<a id="download" href="#" download="' + response.convertedvideo + '"><button>Download</button></a>');
 				},
 				error: function(xhr) {
-					status.html('Something went wrong: ' + xhr.responseText);
+					status.html('Something went wrong: ' + (xhr.responseText || 'Unkown Error'));
 				}
 			});
 			
