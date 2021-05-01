@@ -88,7 +88,7 @@ if(isset($_POST['submit'])) {
 				}
 			});
 			
-			$('#file').on('change', function() {
+			$('input[name=file]').on('change', function() {
 				if (this.files[0].size > 104857600) {
 					alert('File is too big! Max filesize is 100MB');
 					this.value = '';
