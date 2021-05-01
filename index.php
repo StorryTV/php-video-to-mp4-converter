@@ -43,7 +43,7 @@ if(isset($_POST['1'])) {
 	<body>
 		<form id="form" action="" method="post" enctype="multipart/form-data">
 	<input type="file" name="file" accept="video/*" required>
-			<input type="1" name="1" value="1" required>
+			<input type="hidden" name="1" value="1" required>
 	<input type="submit" name="submit" value="Convert">
 		</form>
 		<div id="bararea">
