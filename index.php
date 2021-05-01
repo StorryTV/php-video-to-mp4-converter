@@ -1,13 +1,12 @@
 <?php
 
-$uploads_dir = 'original/';
-$file_name = basename($_FILES['file']['name']);
-$output_name = explode('.', $file_name)[0];
-$uploaded_file = $uploads_dir . $file_name;
-$convert_status = ['mp4' => 0];
-
 // if(isset($_POST['file'])) {
 if (!empty($_POST)) {
+	$uploads_dir = 'original/';
+	$file_name = basename($_FILES['file']['name']);
+	$output_name = explode('.', $file_name)[0];
+	$uploaded_file = $uploads_dir . $file_name;
+	$convert_status = ['mp4' => 0];
 	if(move_uploaded_file($_FILES['file']['tmp_name'], $uploaded_file)) {
 		// Make sure to get the correct path to ffmpeg
 		// Run $ where ffmpeg to get the path
