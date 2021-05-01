@@ -66,6 +66,7 @@ if (!empty($_POST)) {
 					if ($('#checkvideo')) {
 						$('#checkvideo').remove();
 					}
+					$('input[type=submit]').css('display', 'none');
 				},
 				uploadProgress: function(event, position, total, percentComplete) {
 					let percentVal;
@@ -84,11 +85,12 @@ if (!empty($_POST)) {
 					status.html('<a id="download" href="#" download="' + response.convertedvideo + '"><button>Download</button></a>');
 				},
 				error: function(xhr) {
-					status.html('Something went wrong: ' + xhr.responseText);
+					status.html('Something went wrong: ' + (xhr.responseText || 'unknown error'));
 				}
 			});
 			
 			$('input[name=file]').on('change', function() {
+				$('input[type=submit]').css('display', 'none');
 				if (this.files[0].size > 104857600) {
 					alert('File is too big! Max filesize is 100MB');
 					this.value = '';
