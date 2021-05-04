@@ -16,10 +16,15 @@ On Mac OS with Homebrew:
 brew install ffmpeg
 ```
 
-On Ubuntu:
+On Ubuntu (as root):
 
 ```bash
 apt install ffmpeg
+```
+On Ubuntu (as another user using 'sudo'):
+
+```bash
+sudo apt install ffmpeg
 ```
 
 
