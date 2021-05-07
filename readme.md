@@ -8,7 +8,7 @@ Cheers!
 
 You can follow this automatic script (make sure you are in the root directory of the website).
 ```bash
-sudo chmod 754 install.sh
+sudo chmod 750 install.sh
 sudo install.sh
 ```
 
