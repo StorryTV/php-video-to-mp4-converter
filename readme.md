@@ -25,12 +25,7 @@ On Mac OS with Homebrew:
 brew install ffmpeg
 ```
 
-On Ubuntu (as root):
-
-```bash
-apt install ffmpeg
-```
-On Ubuntu (as another user using 'sudo'):
+On Ubuntu:
 
 ```bash
 sudo apt install ffmpeg
