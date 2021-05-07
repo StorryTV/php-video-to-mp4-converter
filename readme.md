@@ -54,6 +54,5 @@ sudo crontab -e
 
 Paste the following at the end of the file (just make sure the path is where your app is located):
 ```bash
-0 0 * * * /usr/bin/find /var/www/html/original/ -name "*.mp4" -type f -mtime +1 -exec rm -f {} \;
-0 0 * * * /usr/bin/find /var/www/html/converted/ -name "*.mp4" -type f -mtime +1 -exec rm -f {} \;
+0 0 * * * /cleanup.sh
 ```
