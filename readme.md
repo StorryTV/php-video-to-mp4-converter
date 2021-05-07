@@ -49,5 +49,5 @@ sudo crontab -e
 
 Paste the following at the end of the file (just make sure the path is where your app is located):
 ```bash
-0 * * * * /cleanup.sh
+0 * * * * /var/ww/html/cleanup.sh
 ```
