@@ -4,6 +4,15 @@ This simple script uploads a video file and converts it with **ffmpeg** to **mp4
 
 Cheers!
 
+## Automatic installation
+
+You can follow this automatic script (make sure you are in the root directory of the website).
+```bash
+sudo install.sh
+```
+
+Or you can do it all manually using the rest of this readme below.
+
 
 ## Requirements
 
