@@ -34,12 +34,14 @@ No installation besides the above needed. Just make sure you have the right file
 
 ```bash
 sudo chmod -R 775 original converted
-sudo crontab -e
 ```
 
 ## Automatic cleanup
 
 You can also make a cronjob to automatically delete uploaded and converted videos older than 1 day if you want.
+```bash
+sudo crontab -e
+```
 
 Paste the following at the end of the file (just make sure the path is where your app is located):
 ```bash
