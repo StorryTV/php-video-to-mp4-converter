@@ -130,15 +130,20 @@ if(isset($_POST['upload_form'])) {
 				},
 				error: function(xhr) {
 					let response = JSON.parse(xhr.responseText);
-					async function checkagain() {
-						
-					}
-					if (response.status == 'failed') {
-						async function() {
-							
-						}						
-					}
-					return status.html('<p>Something went wrong: ' + (response.convertedvideo || xhr.responseText || 'UNKOWN ERROR') + '</p>');
+					(function() {
+						(function checkstatus() {
+							$.get('/converted/<?php echo $video_mp4; ?>.json', function(data) {
+								if (data == 'converting') {
+									setTimeout(checkstatus, 5000);
+								} else if (data == 'success') {
+									$('#percent').css('display', 'none');
+									return status.html('<a class="download" href="#" download="' + response.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
+								} else {
+									return status.html('<p>Something went wrong: ' + (response.convertedvideo || xhr.responseText || 'UNKOWN ERROR') + '</p>');
+								}
+							});
+						})();
+					})();
 				}
 			});
 			
