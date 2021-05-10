@@ -124,12 +124,14 @@ if(isset($_POST['upload_form'])) {
 					let response = JSON.parse(xhr.responseText);
 					$('#percent').css('display', 'none');
 					if (response.status == 'failed') {
-						status.html('<p style="text-align:center;width:100%;">' + response.convertedvideo + '</p>');
+						return status.html('<p style="text-align:center;width:100%;">' + response.convertedvideo + '</p>');
+					} else {
+						return status.html('<a class="download" href="#" download="' + window.top.location.origin + response.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + window.top.location.origin + response.convertedvideo + '" target="_blank"><button>Download Video</button></a>');
 					}
-					status.html('<a class="download" href="#" download="' + window.top.location.origin + response.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + window.top.location.origin + response.convertedvideo + '" target="_blank"><button>Download Video</button></a>');
 				},
 				error: function(xhr) {
-					status.html('Something went wrong: ' + (xhr.responseText || 'unknown error'));
+					let response = JSON.parse(xhr.responseText);
+					status.html('<p>Something went wrong: ' + (response.convertedvideo || xhr.responseText || 'UNKOWN ERROR') + '</p>');
 				}
 			});
 			
