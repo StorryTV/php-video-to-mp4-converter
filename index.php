@@ -133,7 +133,7 @@ if(isset($_POST['upload_form'])) {
 					let response = JSON.parse(xhr.responseText);
 					//(function() {
 						(function checkstatus() {
-							$.get('/converted/<?php echo $video_mp4; ?>.json', function(data) {
+							$.get('/converted/' + <?php echo $video_mp4; ?> + '.json', function(data) {
 								if (JSON.parse(data.status) == 'converting') {
 									setTimeout(checkstatus, 5000);
 								} else if (data == 'success') {
