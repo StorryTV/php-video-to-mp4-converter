@@ -73,7 +73,7 @@ if(isset($_POST['upload_form'])) {
 			input[type="file"]:hover {background-color:rgba(0,0,0,0.15);}
 			input[type="submit"], a.download>button {font-size:28px;border:none;border-radius:5px;background-image:linear-gradient(#7100e2,#58427b,#271212);color:#fff;box-shadow:2px 2px 5px #777;}
 			input[type="submit"]:hover {background-image:linear-gradient(#6f00de,#5c4582,#231010);box-shadow:2px 2px 8px #777;}
-			#percent {font-size:22px;}
+			#percent {font-size:22px;width:100%;text-align:center;}
 			#bararea {width:calc(100% - 40px);height:10px;border:1px solid #7100e2;border-radius:3px;margin-top:20px;background-color:#fff;}
 			#bar {width:1%;margin:0px 0;height:8px;background-color:#03d000;transition-duration:0.5s;}
 			input[type="submit"], #status, #percent {width:100%;text-align:center;margin-top:20px;}
@@ -114,7 +114,7 @@ if(isset($_POST['upload_form'])) {
 						percentVal = percentComplete + '%';
 						bar.width(percentVal);
 					} else {
-						percentVal = '<svg width="30" height="10" viewBox="0 0 120 30" xmlns="http://www.w3.org/2000/svg" fill="#7100e2"><circle cx="15" cy="15" r="15"><animate attributeName="r" from="15" to="15" begin="0s" dur="0.8s" values="15;9;15" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="0.8s" values="1;.5;1" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="60" cy="15" r="9" fill-opacity="0.3"><animate attributeName="r" from="9" to="9" begin="0s" dur="0.8s" values="9;15;9" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="0.5" to="0.5" begin="0s" dur="0.8s" values=".5;1;.5" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="105" cy="15" r="15"><animate attributeName="r" from="15" to="15" begin="0s" dur="0.8s" values="15;9;15" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="0.8s" values="1;.5;1" calcMode="linear" repeatCount="indefinite" /></circle></svg> Processing Video';
+						percentVal = '<svg width="30" height="10" viewBox="0 0 120 30" xmlns="http://www.w3.org/2000/svg" fill="#7100e2"><circle cx="15" cy="15" r="15"><animate attributeName="r" from="15" to="15" begin="0s" dur="0.8s" values="15;9;15" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="0.8s" values="1;.5;1" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="60" cy="15" r="9" fill-opacity="0.3"><animate attributeName="r" from="9" to="9" begin="0s" dur="0.8s" values="9;15;9" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="0.5" to="0.5" begin="0s" dur="0.8s" values=".5;1;.5" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="105" cy="15" r="15"><animate attributeName="r" from="15" to="15" begin="0s" dur="0.8s" values="15;9;15" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="0.8s" values="1;.5;1" calcMode="linear" repeatCount="indefinite" /></circle></svg><p>Processing Video</p>';
 						bar.width('100%');
 					}
 					percent.html(percentVal);
