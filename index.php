@@ -1,9 +1,25 @@
 <?php
 
 if(isset($_POST['upload_form'])) {
+	if (!isset($_FILES['file'])) {
+		die('There is no file to upload.');
+	}
+	$_filepath = $_FILES['file']['tmp_name'];
+	$_fileSize = filesize($_filepath);
+	$_fileinfo = finfo_open(FILEINFO_MIME_TYPE);
+	$_filetype = finfo_file($_fileinfo, $_filepath);
+	if ($_fileSize === 0) { // Check if file is empty
+		die('The file is empty.');
+	}
+	if ($_fileSize > 104857600) { // Check if file is bigger than 100MB
+		die('The file is too large');
+	}
+	if (!substr($_filetype, 0, 5 ) === 'video')
+		die('File not allowed.');
+	}
 	$uploads_dir = 'original/';
 	$file_name = basename($_FILES['file']['name']);
-	$output_name = substr($file_name, 0 , (strrpos($file_name, ".")));
+	$output_name = substr($file_name, 0 , (strrpos($file_name, '.')));
 	$uploaded_file = $uploads_dir . $file_name;
 	$convert_status = ['mp4' => 0];
 	if(move_uploaded_file($_FILES['file']['tmp_name'], $uploaded_file)) {
@@ -12,14 +28,15 @@ if(isset($_POST['upload_form'])) {
 		$ffmpeg = '/usr/bin/ffmpeg';
 		$video_mp4 = $output_name . '.mp4';
 		$status = 'converting';
-		exec($ffmpeg . ' -i "' . $uploaded_file . '" -crf 25 -preset veryfast -c:v libx264 -c:a aac "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
+		exec($ffmpeg . ' -i "' . $uploaded_file . '" -crf 23 -preset ultrafast -c:v libx264 -c:a aac "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
 	}
+	unlink($_filepath);
 	$filepath = '/converted/' . $video_mp4;
 	//$hash = $ipfs->add($filepath);
 	$status = ($convert_status['mp4'] === 0) ? 'failed' : 'success';
 	$arr = array('convertedvideo' => $filepath, 'status' => $status);
 	
-	header("Content-type: application/json; charset=utf-8");
+	header('Content-type: application/json; charset=utf-8');
 	
 	echo json_encode($arr);
 
