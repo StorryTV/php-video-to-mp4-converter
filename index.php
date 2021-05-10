@@ -40,8 +40,10 @@ if(isset($_POST['upload_form'])) {
 		$ffmpeg = '/usr/bin/ffmpeg';
 		$video_mp4 = $output_name . '.mp4';
 		$status = 'converting';
+		$status2 = 'success';
 		$arr = array('status' => $status);
-		exec('echo "' . json_encode($arr) . '" > "./converted/' . $video_mp4 . '".json && ' . $ffmpeg . ' -i "' . $uploaded_file . '" -preset ultrafast -c:v libx264 -c:a aac "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1 && echo "success" > "./converted/' . $video_mp4 . '".json', $output, $convert_status['mp4']);
+		$arr2 = array('status' = $status2);
+		exec('echo "' . json_encode($arr) . '" > "./converted/' . $video_mp4 . '".json && ' . $ffmpeg . ' -i "' . $uploaded_file . '" -preset ultrafast -c:v libx264 -c:a aac "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1 && echo "' . json_encode($arr2) . '" > "./converted/' . $video_mp4 . '".json', $output, $convert_status['mp4']);
 	}
 	unlink($_filepath);
 	$filepath = '/converted/' . $video_mp4;
@@ -131,16 +133,16 @@ if(isset($_POST['upload_form'])) {
 				},
 				error: function(xhr) {
 					let response = JSON.parse(xhr.responseText);
-					let convertingstatus = setTimeout(function() {
+					let convertingstatus = setInterval(function() {
 						$.get('/converted/' + <?php echo $video_mp4; ?> + '.json', function(data) {
 							if (JSON.parse(data.status) == 'converting') {
 								
 							} else if (data == 'success') {
-								clearTimeout(convertingstatus);
+								clearInterval(convertingstatus);
 								$('#percent').css('display', 'none');
 								return status.html('<a class="download" href="#" download="' + response.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
 							} else {
-								return status.html('<p>Something went wrong: ' + (response.convertedvideo || xhr.responseText || 'UNKOWN ERROR') + '</p>');
+								status.html('<p>Something went wrong: ' + (response.convertedvideo || xhr.responseText || 'UNKOWN ERROR') + '</p>');
 							}
 						});
 					}, 5000);
