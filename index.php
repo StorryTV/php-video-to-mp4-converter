@@ -45,7 +45,7 @@ if(isset($_POST['upload_form'])) {
 		$arr2 = array('status' = $status2);
 		$status_arr = json_encode($arr);
 		$status_arr2 = json_encode($arr2);
-		exec('echo "' . $status_arr . '" > "./converted/' . $video_mp4 . '".json && ' . $ffmpeg . ' -i "' . $uploaded_file . '" -preset ultrafast -c:v libx264 -c:a aac "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1 && echo "' . $status_arr2 . '" > "./converted/' . $video_mp4 . '".json', $output, $convert_status['mp4']);
+		exec('echo "' . $status_arr . '" > "./converted/' . $video_mp4 . '.json" && ' . $ffmpeg . ' -i "' . $uploaded_file . '" -preset ultrafast -c:v libx264 -c:a aac "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1 && echo "' . $status_arr2 . '" > "./converted/' . $video_mp4 . '.json"', $output, $convert_status['mp4']);
 	}
 	unlink($_filepath);
 	$filepath = '/converted/' . $video_mp4;
@@ -97,7 +97,73 @@ if(isset($_POST['upload_form'])) {
 		</div>
 		<div id="percent"></div>
 		<div id="status"></div>
-		
+		<script type="text/javascript">
+			//$(document).on('load', function() {
+			let bar = $('#bar');
+			let percent = $('#percent');
+			let status = $('#status');
+			
+			$('#form').ajaxForm({
+				beforeSend: function() {
+					status.empty();
+					let percentVal = '0%';
+					bar.width(percentVal);
+					percent.html('<p>' + percentVal + '</p>');
+					if ($('#checkvideo')) {
+						$('#checkvideo').remove();
+					}
+					$('input[type=submit]').css('display', 'none');
+				},
+				uploadProgress: function(event, position, total, percentComplete) {
+					let percentVal;
+					if (percentComplete !== 100) {
+						percentVal = percentComplete + '%';
+						bar.width(percentVal);
+					} else {
+						percentVal = '<svg width="30" height="10" viewBox="0 0 120 30" xmlns="http://www.w3.org/2000/svg" fill="#7100e2"><circle cx="15" cy="15" r="15"><animate attributeName="r" from="15" to="15" begin="0s" dur="0.8s" values="15;9;15" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="0.8s" values="1;.5;1" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="60" cy="15" r="9" fill-opacity="0.3"><animate attributeName="r" from="9" to="9" begin="0s" dur="0.8s" values="9;15;9" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="0.5" to="0.5" begin="0s" dur="0.8s" values=".5;1;.5" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="105" cy="15" r="15"><animate attributeName="r" from="15" to="15" begin="0s" dur="0.8s" values="15;9;15" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="0.8s" values="1;.5;1" calcMode="linear" repeatCount="indefinite" /></circle></svg><p>Processing Video</p>';
+						bar.width('100%');
+					}
+					percent.html('<p>' + percentVal + '</p>');
+				},
+				complete: function(xhr) {
+					let response = JSON.parse(xhr.responseText);
+					$('#percent').css('display', 'none');
+					if (response.status == 'failed') {
+						return status.html('<p style="text-align:center;width:100%;font-size:21px;font-weight:600px;">Failed: ' + response.convertedvideo + '</p>');
+					} else {
+						return status.html('<a class="download" href="#" download="' + response.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
+					}
+				},
+				error: function(xhr) {
+					let response = JSON.parse(xhr.responseText);
+					let convertingstatus = setInterval(function() {
+						$.get('/converted/<?php echo $video_mp4;?>.json', function(data) {
+							let response2 = JSON.parse(data.responseText);
+							if (JSON.parse(data.status) == 'converting') {
+								
+							} else if (data == 'success') {
+								clearInterval(convertingstatus);
+								$('#percent').css('display', 'none');
+								return status.html('<a class="download" href="#" download="' + response2.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response2.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
+							} else {
+								status.html('<p>Something went wrong: UNKOWN ERROR</p>');
+							}
+						});
+					}, 5000);
+				}
+			});
+			
+			$('input[name=file]').on('change', function() {
+				if (this.files[0].size > 104857600) {
+					alert('File is too big! Max filesize is 100MB');
+					this.value = '';
+				} else {
+					$('#percent').css('display', 'unset');
+					$('#form').submit();
+				}
+			});
+			//});
+		</script>
 	</body>
 </html>
 
