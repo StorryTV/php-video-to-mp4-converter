@@ -134,7 +134,7 @@ if(isset($_POST['upload_form'])) {
 				error: function(xhr) {
 					let response = JSON.parse(xhr.responseText);
 					let convertingstatus = setInterval(function() {
-						$.get('/converted/' + <?php echo $video_mp4; ?> + '.json', function(data) {
+						$.get('/converted/<?php echo $video_mp4;?>.json', function(data) {
 							if (JSON.parse(data.status) == 'converting') {
 								
 							} else if (data == 'success') {
