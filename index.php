@@ -40,7 +40,7 @@ if(isset($_POST['upload_form'])) {
 		$ffmpeg = '/usr/bin/ffmpeg';
 		$video_mp4 = $output_name . '.mp4';
 		$status = 'converting';
-		exec($ffmpeg . ' -i "' . $uploaded_file . '" -preset ultrafast -c:v libx264 -c:a aac "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
+		exec('echo "' . $status . '" > "./converted/' . $video_mp4 . '".json && ' . $ffmpeg . ' -i "' . $uploaded_file . '" -preset ultrafast -c:v libx264 -c:a aac "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1 && echo "success" > "./converted/' . $video_mp4 . '".json', $output, $convert_status['mp4']);
 	}
 	unlink($_filepath);
 	$filepath = '/converted/' . $video_mp4;
@@ -130,7 +130,14 @@ if(isset($_POST['upload_form'])) {
 				},
 				error: function(xhr) {
 					let response = JSON.parse(xhr.responseText);
+					async function checkagain() {
+						
+					}
 					if (response.status == 'failed') {
+						async function() {
+							
+						}						
+					}
 					return status.html('<p>Something went wrong: ' + (response.convertedvideo || xhr.responseText || 'UNKOWN ERROR') + '</p>');
 				}
 			});
