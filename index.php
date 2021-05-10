@@ -42,7 +42,7 @@ if(isset($_POST['upload_form'])) {
 		<style type="text/css">
 			input[type="file"] {width:100%;height:200px;padding:80px 10vw;font-size:28px;background-color:rgba(0,0,0,0.1);border:2px dashed rgba(0,0,0,0.2);border-radius:10px;cursor:pointer;}
 			input[type="file"]:hover {background-color:rgba(0,0,0,0.15);}
-			input[type="submit"], a#download>button {font-size:28px;border:none;border-radius:5px;background-image:linear-gradient(#7100e2,#58427b,#271212);color:#fff;box-shadow:2px 2px 5px #777;}
+			input[type="submit"], a.download>button {font-size:28px;border:none;border-radius:5px;background-image:linear-gradient(#7100e2,#58427b,#271212);color:#fff;box-shadow:2px 2px 5px #777;}
 			input[type="submit"]:hover {background-image:linear-gradient(#6f00de,#5c4582,#231010);box-shadow:2px 2px 8px #777;}
 			#percent {font-size:22px;}
 			#bararea {width:calc(100% - 40px);height:10px;border:1px solid #7100e2;border-radius:3px;margin-top:20px;background-color:#fff;}
@@ -93,8 +93,7 @@ if(isset($_POST['upload_form'])) {
 				complete: function(xhr) {
 					let response = JSON.parse(xhr.responseText);
 					$('#percent').css('display', 'none');
-					status.html('<a id="download" href="' + response.convertedvideo + '" target="_blank"><button>Download Video</button></a>');
-					$('#download').click();
+					status.html('<a class="download" href="#" download="' + response.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Download Video</button></a>');
 				},
 				error: function(xhr) {
 					status.html('Something went wrong: ' + (xhr.responseText || 'unknown error'));
