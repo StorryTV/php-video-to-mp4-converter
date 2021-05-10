@@ -78,6 +78,7 @@ if(isset($_POST['upload_form'])) {
 			#bar {width:1%;margin:0px 0;height:8px;background-color:#03d000;transition-duration:0.5s;}
 			input[type="submit"], #status, #percent {width:100%;text-align:center;margin-top:20px;}
 			#form, #bararea {margin:20px;}
+			.new_tab:after {background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE2LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgd2lkdGg9IjM5My43ODlweCIgaGVpZ2h0PSIzOTMuNzg5cHgiIHZpZXdCb3g9IjAgMCAzOTMuNzg5IDM5My43ODkiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDM5My43ODkgMzkzLjc4OTsiDQoJIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGc+DQoJPGc+DQoJCTxwYXRoIGQ9Ik0zMDQuOSwxOTAuODczYy01LjQ0OSwwLTkuODY1LDQuNDIyLTkuODY1LDkuODY0djE0MS4wMzNjMCwxNy44MDUtMTQuNDgyLDMyLjI4My0zMi4yODUsMzIuMjgzSDUyLjAxNQ0KCQkJYy0xNy44MDIsMC0zMi4yODQtMTQuNDc5LTMyLjI4NC0zMi4yODNWMTMxLjAzN2MwLTE3Ljc5NSwxNC40ODItMzIuMjg1LDMyLjI4NC0zMi4yODVoMTQxLjAzM2M1LjQ0OCwwLDkuODY2LTQuNDEyLDkuODY2LTkuODY1DQoJCQljMC01LjQ0My00LjQxOC05Ljg2NS05Ljg2Ni05Ljg2NUg1Mi4wMTVDMjMuMzM0LDc5LjAyMiwwLDEwMi4zNTYsMCwxMzEuMDM4djIxMC43MzRjMCwyOC42ODIsMjMuMzM0LDUyLjAxNCw1Mi4wMTUsNTIuMDE0SDI2Mi43NQ0KCQkJYzI4LjY4MiwwLDUyLjAxNi0yMy4zMzIsNTIuMDE2LTUyLjAxNFYyMDAuNzM3QzMxNC43NjYsMTk1LjI5NSwzMTAuMzQ4LDE5MC44NzMsMzA0LjksMTkwLjg3M3oiLz4NCgkJPHBhdGggZD0iTTMwNC45LDAuMDAzYy00OS4wMTYsMC04OC44OTUsMzkuODc2LTg4Ljg5NSw4OC44ODRjMCw0OS4wMiwzOS44NzksODguODk1LDg4Ljg5NSw4OC44OTUNCgkJCWM0OS4wMTIsMCw4OC44ODktMzkuODc1LDg4Ljg4OS04OC44OTVDMzkzLjc4OSwzOS44NzksMzUzLjkxMiwwLjAwMywzMDQuOSwwLjAwM3ogTTMwNC45LDE1OC4wNTENCgkJCWMtMzguMTM3LDAtNjkuMTY0LTMxLjAyMS02OS4xNjQtNjkuMTY0YzAtMzguMTMxLDMxLjAyNy02OS4xNTMsNjkuMTY0LTY5LjE1M2MzOC4xMzMsMCw2OS4xNTgsMzEuMDIyLDY5LjE1OCw2OS4xNTMNCgkJCUMzNzQuMDU5LDEyNy4wMjksMzQzLjAzMywxNTguMDUxLDMwNC45LDE1OC4wNTF6Ii8+DQoJPC9nPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPC9zdmc+DQo=);}
 		</style>
 	</head>
 	<body>
@@ -125,12 +126,12 @@ if(isset($_POST['upload_form'])) {
 					if (response.status == 'failed') {
 						return status.html('<p style="text-align:center;width:100%;">' + response.convertedvideo + '</p>');
 					} else {
-						return status.html('<a class="download" href="#" download="' + window.top.location.origin + response.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + window.top.location.origin + response.convertedvideo + '" target="_blank"><button>Download Video</button></a>');
+						return status.html('<a class="download" href="#" download="' + response.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download new_tab" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
 					}
 				},
 				error: function(xhr) {
 					let response = JSON.parse(xhr.responseText);
-					status.html('<p>Something went wrong: ' + (response.convertedvideo || xhr.responseText || 'UNKOWN ERROR') + '</p>');
+					return status.html('<p>Something went wrong: ' + (response.convertedvideo || xhr.responseText || 'UNKOWN ERROR') + '</p>');
 				}
 			});
 			
