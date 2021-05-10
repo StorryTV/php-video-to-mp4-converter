@@ -12,7 +12,7 @@ if(isset($_POST['upload_form'])) {
 		$ffmpeg = '/usr/bin/ffmpeg';
 		$video_mp4 = $output_name . '.mp4';
 		$status = 'converting';
-		exec($ffmpeg . ' -i "' . $uploaded_file . '" -crf 25 -preset veryfast -c:v libx264 "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
+		exec($ffmpeg . ' -i "' . $uploaded_file . '" -crf 25 -preset veryfast -c:v libx264 -c:a aac "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
 	}
 	$filepath = '/converted/' . $video_mp4;
 	//$hash = $ipfs->add($filepath);
@@ -94,7 +94,7 @@ if(isset($_POST['upload_form'])) {
 				complete: function(xhr) {
 					let response = JSON.parse(xhr.responseText);
 					$('#percent').css('display', 'none');
-					status.html('<a class="download" href="#" download="' + response.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Download Video</button></a>');
+					status.html('<a class="download" href="#" download="' + window.top.location.origin + response.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Download Video</button></a>');
 				},
 				error: function(xhr) {
 					status.html('Something went wrong: ' + (xhr.responseText || 'unknown error'));
