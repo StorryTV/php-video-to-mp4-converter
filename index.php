@@ -14,7 +14,7 @@ if(isset($_POST['upload_form'])) {
 	if ($_fileSize > 104857600) { // Check if file is bigger than 100MB
 		die('The file is too large');
 	}
-	if (!substr($_filetype, 0, 5 ) === 'video') { // Check if it is really a video
+	if (substr($_filetype, 0, 5 ) !== 'video') { // Check if it is really a video
 		die('File not allowed.');
 	}
 	$uploads_dir = 'original/';
