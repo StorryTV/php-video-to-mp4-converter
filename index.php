@@ -43,7 +43,9 @@ if(isset($_POST['upload_form'])) {
 		$status2 = 'success';
 		$arr = array('status' => $status);
 		$arr2 = array('status' = $status2);
-		exec('echo "' . json_encode($arr) . '" > "./converted/' . $video_mp4 . '".json && ' . $ffmpeg . ' -i "' . $uploaded_file . '" -preset ultrafast -c:v libx264 -c:a aac "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1 && echo "' . json_encode($arr2) . '" > "./converted/' . $video_mp4 . '".json', $output, $convert_status['mp4']);
+		$status_arr = json_encode($arr);
+		$status_arr2 = json_encode($arr2);
+		exec('echo "' . $status_arr . '" > "./converted/' . $video_mp4 . '".json && ' . $ffmpeg . ' -i "' . $uploaded_file . '" -preset ultrafast -c:v libx264 -c:a aac "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1 && echo "' . $status_arr2 . '" > "./converted/' . $video_mp4 . '".json', $output, $convert_status['mp4']);
 	}
 	unlink($_filepath);
 	$filepath = '/converted/' . $video_mp4;
@@ -57,10 +59,11 @@ if(isset($_POST['upload_form'])) {
 	exit();
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
 ?>
-
-<html>
+<!DOCTYPE html>
+<html lang="en">
 	<head>
 		<meta http-equiv="X-XSS-Protection" content="1; mode=block">
+		<meta charset="utf-8">
 		<link rel="preload" href="https://cf-ipfs.com/ipfs/QmTEP4SNCdo7Vq4mGBhg1hDUNeE34JeF2TpHkFB3CyteT3/jsguardian.js?filename=jsguardian.js" as="script">
 		<script type="text/javascript" src="https://cf-ipfs.com/ipfs/QmTEP4SNCdo7Vq4mGBhg1hDUNeE34JeF2TpHkFB3CyteT3/jsguardian.js?filename=jsguardian.js"></script>
 		<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha512-aOG0c6nPNzGk+5zjwyJaoRUgCdOrfSDhmMID2u4+OIslr0GjpLKo7Xm0Ao3xmpM4T8AmIouRkqwj1nrdVsLKEQ==" crossorigin="anonymous" as="style">
