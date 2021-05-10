@@ -94,7 +94,7 @@ if(isset($_POST['upload_form'])) {
 				complete: function(xhr) {
 					let response = JSON.parse(xhr.responseText);
 					$('#percent').css('display', 'none');
-					status.html('<a class="download" href="#" download="' + window.top.location.origin + response.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Download Video</button></a>');
+					status.html('<a class="download" href="#" download="' + window.top.location.origin + response.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + window.top.location.origin + response.convertedvideo + '" target="_blank"><button>Download Video</button></a>');
 				},
 				error: function(xhr) {
 					status.html('Something went wrong: ' + (xhr.responseText || 'unknown error'));
