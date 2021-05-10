@@ -3,14 +3,15 @@
 if(isset($_POST['upload_form'])) {
 	$uploads_dir = 'original/';
 	$file_name = basename($_FILES['file']['name']);
-	$output_name = explode('.', $file_name)[0];
+	$output_name = substr($file_name, 0 , (strrpos($file_name, ".")));
 	$uploaded_file = $uploads_dir . $file_name;
 	$convert_status = ['mp4' => 0];
 	if(move_uploaded_file($_FILES['file']['tmp_name'], $uploaded_file)) {
 		// Make sure to get the correct path to ffmpeg
-		// Run $ where ffmpeg to get the path
+		// Run "whereis ffmpeg" in your terminal to get the correct path (the first of the results is usually the correct one)
 		$ffmpeg = '/usr/bin/ffmpeg';
 		$video_mp4 = $output_name . '.mp4';
+		$status = 'converting';
 		exec($ffmpeg . ' -i "' . $uploaded_file . '" -crf 25 -preset veryfast -c:v libx264 "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
 	}
 	$filepath = '/converted/' . $video_mp4;
