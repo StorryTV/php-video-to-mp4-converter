@@ -44,8 +44,7 @@ if(isset($_POST['upload_form'])) {
 	}
 	unlink($_filepath);
 	$filepath = '/converted/' . $video_mp4;
-	//$hash = $ipfs->add($filepath);
-	$status = ($convert_status['mp4'] === 0) ? 'failed' : 'success';
+	$status = ($convert_status['mp4'] === 0) ? 'success' : 'failed';
 	$arr = array('convertedvideo' => $filepath, 'status' => $status);
 	
 	header('Content-type: application/json; charset=utf-8');
