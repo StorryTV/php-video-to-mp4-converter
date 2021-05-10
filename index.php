@@ -124,7 +124,7 @@ if(isset($_POST['upload_form'])) {
 					let response = JSON.parse(xhr.responseText);
 					$('#percent').css('display', 'none');
 					if (response.status == 'failed') {
-						return status.html('<p style="text-align:center;width:100%;">' + response.convertedvideo + '</p>');
+						return status.html('<p style="text-align:center;width:100%;font-size:21px;font-weight:600px;">Failed: ' + response.convertedvideo + '</p>');
 					} else {
 						return status.html('<a class="download" href="#" download="' + response.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download new_tab" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
 					}
