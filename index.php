@@ -135,12 +135,13 @@ if(isset($_POST['upload_form'])) {
 					let response = JSON.parse(xhr.responseText);
 					let convertingstatus = setInterval(function() {
 						$.get('/converted/<?php echo $video_mp4;?>.json', function(data) {
+							let response2 = JSON.parse(data.responseText);
 							if (JSON.parse(data.status) == 'converting') {
 								
 							} else if (data == 'success') {
 								clearInterval(convertingstatus);
 								$('#percent').css('display', 'none');
-								return status.html('<a class="download" href="#" download="' + response.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
+								return status.html('<a class="download" href="#" download="' + response2.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response2.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
 							} else {
 								status.html('<p>Something went wrong: UNKOWN ERROR</p>');
 							}
