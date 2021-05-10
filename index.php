@@ -2,20 +2,32 @@
 
 if(isset($_POST['upload_form'])) {
 	if (!isset($_FILES['file'])) {
-		die('There is no file to upload.');
+		exit('There is no file to upload.');
 	}
 	$_filepath = $_FILES['file']['tmp_name'];
 	$_fileSize = filesize($_filepath);
 	$_fileinfo = finfo_open(FILEINFO_MIME_TYPE);
 	$_filetype = finfo_file($_fileinfo, $_filepath);
 	if ($_fileSize === 0) { // Check if file is empty
-		die('The file is empty.');
+		$status = 'failed';
+		$arr = array('convertedvideo' => 'The file is empty.', 'status' => $status);
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($arr);
+		exit();
 	}
 	if ($_fileSize > 104857600) { // Check if file is bigger than 100MB
-		die('The file is too large');
+		$status = 'failed';
+		$arr = array('convertedvideo' => 'The file is too large', 'status' => $status);
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($arr);
+		exit();
 	}
 	if (substr($_filetype, 0, 5 ) !== 'video') { // Check if it is really a video
-		die('File not allowed.');
+		$status = 'failed';
+		$arr = array('convertedvideo' => 'File not allowed.', 'status' => $status);
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($arr);
+		exit();
 	}
 	$uploads_dir = 'original/';
 	$file_name = basename($_FILES['file']['name']);
