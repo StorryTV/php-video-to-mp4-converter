@@ -40,7 +40,7 @@ if(isset($_POST['upload_form'])) {
 		$ffmpeg = '/usr/bin/ffmpeg';
 		$video_mp4 = $output_name . '.mp4';
 		$status = 'converting';
-		exec($ffmpeg . ' -i "' . $uploaded_file . '" -crf 23 -preset ultrafast -c:v libx264 -c:a aac "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
+		exec($ffmpeg . ' -i "' . $uploaded_file . '" -crf 23 -preset ultrafast -tune zerolatency -c:v libx264 -c:a aac "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
 	}
 	unlink($_filepath);
 	$filepath = '/converted/' . $video_mp4;
