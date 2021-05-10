@@ -142,7 +142,7 @@ if(isset($_POST['upload_form'])) {
 								$('#percent').css('display', 'none');
 								return status.html('<a class="download" href="#" download="' + response.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
 							} else {
-								status.html('<p>Something went wrong: ' + (response.convertedvideo || xhr.responseText || 'UNKOWN ERROR') + '</p>');
+								status.html('<p>Something went wrong: UNKOWN ERROR</p>');
 							}
 						});
 					}, 5000);
