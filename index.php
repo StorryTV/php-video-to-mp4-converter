@@ -42,7 +42,7 @@ if(isset($_POST['upload_form'])) {
 		$status = 'converting';
 		$status2 = 'success';
 		$arr = array('status' => $status);
-		$arr2 = array('status' = $status2);
+		$arr2 = array('status' => $status2);
 		$status_arr = json_encode($arr);
 		$status_arr2 = json_encode($arr2);
 		exec('echo "' . $status_arr . '" > "./converted/' . $video_mp4 . '.json" && ' . $ffmpeg . ' -i "' . $uploaded_file . '" -preset ultrafast -c:v libx264 -c:a aac "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1 && echo "' . $status_arr2 . '" > "./converted/' . $video_mp4 . '.json"', $output, $convert_status['mp4']);
