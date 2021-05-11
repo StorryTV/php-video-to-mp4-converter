@@ -41,16 +41,18 @@ if(isset($_POST['upload_form'])) {
 		$video_mp4 = $output_name . '.mp4';
 		$status = 'converting';
 		$status2 = 'success';
-		$arr = array('status' => $status);
-		$arr2 = array('status' => $status2);
+		$arr = array('convertingstatus' => $status);
+		$arr2 = array('convertingstatus' => $status2);
 		$status_arr = json_encode($arr);
 		$status_arr2 = json_encode($arr2);
-		exec('echo "' . $status_arr . '" > "./converted/' . $video_mp4 . '.json" && ' . $ffmpeg . ' -i "' . $uploaded_file . '" -preset ultrafast -c:v libx264 -c:a aac "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1 && echo "' . $status_arr2 . '" > "./converted/' . $video_mp4 . '.json"', $output, $convert_status['mp4']);
+		$getstatus1 = "<?php header('Content-type: application/json; charset=utf-8'); echo json_encode(array('convertedvideo' => false, 'convertingstatus' => 'converting')); exit(); ?>"
+		$getstatus2 = "<?php header('Content-type: application/json; charset=utf-8'); echo json_encode(array('convertedvideo' => false, 'convertingstatus' => 'success')); exit(); ?>"
+		exec('echo "' . $getstatus1 . '" > "./converted/' . $video_mp4 . '.php" && ' . $ffmpeg . ' -i "' . $uploaded_file . '" -preset ultrafast -c:v libx264 -c:a aac "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1 && echo "' . $getstatus2 . '" > "./converted/' . $video_mp4 . '.php"', $output, $convert_status['mp4']);
 	}
 	unlink($_filepath);
 	$filepath = '/converted/' . $video_mp4;
 	$status = ($convert_status['mp4'] === 0) ? 'success' : 'failed';
-	$arr = array('convertedvideo' => $filepath, 'status' => $status);
+	$arr = array('convertedvideo' => $filepath, 'convertingstatus' => $status);
 	
 	header('Content-type: application/json; charset=utf-8');
 	
@@ -128,7 +130,7 @@ if(isset($_POST['upload_form'])) {
 				complete: function(xhr) {
 					let response = JSON.parse(xhr.responseText);
 					$('#percent').css('display', 'none');
-					if (response.status == 'failed') {
+					if (response.convertingstatus == 'failed') {
 						return status.html('<p style="text-align:center;width:100%;font-size:21px;font-weight:600px;">Failed: ' + response.convertedvideo + '</p>');
 					} else {
 						return status.html('<a class="download" href="#" download="' + response.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
@@ -137,11 +139,11 @@ if(isset($_POST['upload_form'])) {
 				error: function(xhr) {
 					let response = JSON.parse(xhr.responseText);
 					let convertingstatus = setInterval(function() {
-						$.get('/converted/<?php echo $video_mp4;?>.json', function(data) {
+						$.get('/converted/<?php echo $video_mp4;?>.php', function(data) {
 							let response2 = JSON.parse(data.responseText);
-							if (JSON.parse(data.status) == 'converting') {
+							if (response2.convertingstatus == 'converting') {
 								
-							} else if (data == 'success') {
+							} else if (response2.convertingstatus == 'success') {
 								clearInterval(convertingstatus);
 								$('#percent').css('display', 'none');
 								return status.html('<a class="download" href="#" download="' + response2.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response2.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
