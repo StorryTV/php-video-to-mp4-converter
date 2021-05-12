@@ -52,7 +52,7 @@ if(isset($_POST['upload_form'])) {
 		$status_arr2 = json_encode($arr2);
 		$getstatus1 = var_export($status_arr, true);
 		file_put_contents('./converted/' . $video_mp4 . '.json', $getstatus1);
-		exec($ffmpeg . ' -i "' . $uploaded_file . '" -preset ultrafast -c:v libx264 -c:a aac "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
+		exec($ffmpeg . ' -i "' . $uploaded_file . '" -preset ultrafast -crf 23 -c:v libx264 -c:a copy "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
 		$getstatus2 = var_export($status_arr2, true);
 		file_put_contents('./converted/' . $video_mp4 . '.json', $getstatus2);
 	}
@@ -143,7 +143,7 @@ if(isset($_POST['upload_form'])) {
 					if (response.convertingstatus == 'failed') {
 						return status.html('<p style="text-align:center;width:100%;font-size:21px;font-weight:600px;">Failed: ' + fileName + ' has failed the conversion :(</p>');
 					} else {
-						return status.html('<a class="download" href="#" download="' + response.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
+						return status.html('<a class="download" href="' + response.convertedvideo + '" download="' + fileName + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
 					}
 				},
 				error: () => {
@@ -176,13 +176,13 @@ if(isset($_POST['upload_form'])) {
 							if (JSON.parse((data.responseText).replace("'", "").replace("'", "")).convertingstatus == 'done') {
 								$('#percent').css('display', 'none');
 								clearInterval(interval);
-								return status.html('<a class="download" href="#" download="' + JSON.parse((data.responseText).replace("'", "").replace("'", "")).convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="/converted/' + document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop() + '" target="_blank"><button>Open video in a new tab</button></a>');
+								return status.html('<a class="download" href="' + JSON.parse((data.responseText).replace("'", "").replace("'", "")).convertedvideo + '" download="' + document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop() + '"><button>Download Video</button></a><br/><br/><a class="download" href="/converted/' + document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop() + '" target="_blank"><button>Open video in a new tab</button></a>');
 							} else if (JSON.parse((data.responseText).replace("'", "").replace("'", "")).convertingstatus == 'converting') {
 								console.log('Still converting...');
 							} else if (JSON.parse((data.responseText).replace("'", "").replace("'", "")).convertingstatus == 'failed') {
 								$('#percent').css('display', 'none');
 								clearInterval(interval);
-								return status.html('<a class="download" href="#" download="' + data.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + data.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
+								return status.html('<a class="download" href="' + data.convertedvideo + '" download="' + document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop() + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + data.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
 							} else {
 								console.log('no');
 								status.html('<p>Something went wrong: UNKOWN ERROR</p>');
