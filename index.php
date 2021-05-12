@@ -169,7 +169,7 @@ if(isset($_POST['upload_form'])) {
 			function getConvertingStatus() {
 					$.ajax({
 						type: "GET",
-						url: '/converted/' + document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop() + '.json',
+						url: '/converted/' + document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop().replace(document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop().split('.').pop(), 'mp4') + '.json',
 						cache: false,
 						complete: (data) => {
 							console.log(data);
