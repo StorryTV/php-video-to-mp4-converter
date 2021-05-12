@@ -162,7 +162,7 @@ if(isset($_POST['upload_form'])) {
 				//if (timeout_ === '1') {
 					$.ajax({
 						type: "GET",
-						url: '/converted/' + document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop() + '.json?c=' + Date.now(),
+						url: '/converted/' + document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop() + '.json',
 						cache: false,
 						complete: (data) => {
 							console.log(data);
