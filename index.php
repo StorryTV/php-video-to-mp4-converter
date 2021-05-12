@@ -162,14 +162,14 @@ if(isset($_POST['upload_form'])) {
 				//if (timeout_ === '1') {
 					$.ajax({
 						type: "GET",
-						url: '/converted/' + document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop() + '.json?c=' + new Date().getTime(),
+						url: '/converted/' + document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop() + '.json?c=' + Date.now(),
 						cache: false,
 						complete: (data) => {
 							console.log(data);
 							if (JSON.parse((data.responseText).replace("'", "").replace("'", "")).convertingstatus == 'done') {
 								$('#percent').css('display', 'none');
 								clearInterval(interval);
-								return status.html('<a class="download" href="#" download="' + JSON.parse((data.responseText).replace("'", "").replace("'", "")).convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="/converted/' + document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop() + '.json" target="_blank"><button>Open video in a new tab</button></a>');
+								return status.html('<a class="download" href="#" download="' + JSON.parse((data.responseText).replace("'", "").replace("'", "")).convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="/converted/' + document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop() + '" target="_blank"><button>Open video in a new tab</button></a>');
 							} else if (JSON.parse((data.responseText).replace("'", "").replace("'", "")).convertingstatus == 'converting') {
 								console.log('Still converting...');
 							} else if (JSON.parse((data.responseText).replace("'", "").replace("'", "")).convertingstatus == 'failed') {
@@ -183,16 +183,10 @@ if(isset($_POST['upload_form'])) {
 						},
 						dataType: "json"
 					});
-				//} else {
-					
-				//}
-			} 
-			
-			//$('#form').submit(function() {
-			//	interval = setInterval(getConvertingStatus, 5000);
-			//});
+			}
 			
 			$('input[name=file]').on('change', function() {
+				clearInterval(interval);
 				if (this.files[0].size > 104857600) {
 					alert('File is too big! Max filesize is 100MB');
 					this.value = '';
