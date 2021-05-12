@@ -12,6 +12,7 @@ sudo chmod 750 ./install.sh && sudo ./install.sh
 ```
 
 Or you can do it all manually using the rest of this readme below.
+WARNING: If you already did the automatic installation from above you don't need to follow the next steps! You are already ready to go :)
 
 
 ## Requirements
