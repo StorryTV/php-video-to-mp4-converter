@@ -167,22 +167,23 @@ if(isset($_POST['upload_form'])) {
 			});
 			
 			function getConvertingStatus() {
+				let downloadurl = document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop().replace(document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop().split('.').pop(), 'mp4');
 					$.ajax({
 						type: "GET",
-						url: '/converted/' + document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop().replace(document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop().split('.').pop(), 'mp4') + '.json',
+						url: '/converted/' + downloadurl + '.json',
 						cache: false,
 						complete: (data) => {
 							console.log(data);
 							if (JSON.parse((data.responseText).replace("'", "").replace("'", "")).convertingstatus == 'done') {
 								$('#percent').css('display', 'none');
 								clearInterval(interval);
-								return status.html('<a class="download" href="' + JSON.parse((data.responseText).replace("'", "").replace("'", "")).convertedvideo + '" download="' + document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop().replace(document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop().split('.').pop(), 'mp4') + '"><button>Download Video</button></a><br/><br/><a class="download" href="/converted/' + document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop().replace(document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop().split('.').pop(), 'mp4') + '" target="_blank"><button>Open video in a new tab</button></a>');
+								return status.html('<a class="download" href="/converted/' + downloadurl + '" download="' + downloadurl + '"><button>Download Video</button></a><br/><br/><a class="download" href="/converted/' + downloadurl + '" target="_blank"><button>Open video in a new tab</button></a>');
 							} else if (JSON.parse((data.responseText).replace("'", "").replace("'", "")).convertingstatus == 'converting') {
 								console.log('Still converting...');
 							} else if (JSON.parse((data.responseText).replace("'", "").replace("'", "")).convertingstatus == 'failed') {
 								$('#percent').css('display', 'none');
 								clearInterval(interval);
-								return status.html('<a class="download" href="' + data.convertedvideo + '" download="' + document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop().replace(document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop().split('.').pop(), 'mp4') + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + data.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
+								return status.html('<a class="download" href="' + data.convertedvideo + '" download="' + downloadurl + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + data.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
 							} else {
 								console.log('no');
 								status.html('<p>Something went wrong: UNKOWN ERROR</p>');
