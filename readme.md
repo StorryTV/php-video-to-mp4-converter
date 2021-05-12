@@ -37,7 +37,7 @@ sudo apt install ffmpeg
 No installation besides the above needed. Just make sure you have the right file permissions.
 
 ```bash
-sudo chmod -R 775 ./original ./converted && sudo chmod 770 ./cleanup.php && sudo chmod 750 ./install.sh
+sudo chmod -R 775 ./original ./converted && sudo chmod 770 ./cleanup.php && sudo chmod 750 ./install.sh && sudo chmod 750 ./log.txt
 ```
 
 ## Automatic cleanup
