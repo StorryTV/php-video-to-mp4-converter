@@ -2,7 +2,11 @@
 
 if(isset($_POST['upload_form'])) {
 	if (!isset($_FILES['file'])) {
-		exit('There is no file to upload.');
+		$status = 'failed';
+		$arr = array('convertedvideo' => 'There is no file', 'convertingstatus' => $status);
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($arr);
+		exit();
 	}
 	$_filepath = $_FILES['file']['tmp_name'];
 	$_fileSize = filesize($_filepath);
@@ -10,21 +14,21 @@ if(isset($_POST['upload_form'])) {
 	$_filetype = finfo_file($_fileinfo, $_filepath);
 	if ($_fileSize === 0) { // Check if file is empty
 		$status = 'failed';
-		$arr = array('convertedvideo' => 'The file is empty.', 'status' => $status);
+		$arr = array('convertedvideo' => 'The file is empty', 'convertingstatus' => $status);
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode($arr);
 		exit();
 	}
 	if ($_fileSize > 104857600) { // Check if file is bigger than 100MB
 		$status = 'failed';
-		$arr = array('convertedvideo' => 'The file is too large', 'status' => $status);
+		$arr = array('convertedvideo' => 'The file is too large', 'convertingstatus' => $status);
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode($arr);
 		exit();
 	}
 	if (substr($_filetype, 0, 5 ) !== 'video') { // Check if it is really a video
 		$status = 'failed';
-		$arr = array('convertedvideo' => 'File not allowed.', 'status' => $status);
+		$arr = array('convertedvideo' => 'File not allowed.', 'convertingstatus' => $status);
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode($arr);
 		exit();
@@ -40,24 +44,25 @@ if(isset($_POST['upload_form'])) {
 		$ffmpeg = '/usr/bin/ffmpeg';
 		$video_mp4 = $output_name . '.mp4';
 		$status = 'converting';
-		$status2 = 'success';
+		$status2 = 'done';
 		$arr = array('convertingstatus' => $status);
 		$arr2 = array('convertingstatus' => $status2);
 		$status_arr = json_encode($arr);
 		$status_arr2 = json_encode($arr2);
-		$getstatus1 = "<?php header('Content-type: application/json; charset=utf-8'); echo json_encode(array('convertedvideo' => false, 'convertingstatus' => 'converting')); exit(); ?>"
-		$getstatus2 = "<?php header('Content-type: application/json; charset=utf-8'); echo json_encode(array('convertedvideo' => false, 'convertingstatus' => 'success')); exit(); ?>"
-		exec('echo "' . $getstatus1 . '" > "./converted/' . $video_mp4 . '.php" && ' . $ffmpeg . ' -i "' . $uploaded_file . '" -preset ultrafast -c:v libx264 -c:a aac "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1 && echo "' . $getstatus2 . '" > "./converted/' . $video_mp4 . '.php"', $output, $convert_status['mp4']);
+		$getstatus1 = var_export($status_arr, true);
+		file_put_contents('./converted/' . $video_mp4 . '.json', $getstatus1);
+		exec($ffmpeg . ' -i "' . $uploaded_file . '" -preset ultrafast -c:v libx264 -c:a aac "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
+		$getstatus2 = var_export($status_arr2, true);
+		file_put_contents('./converted/' . $video_mp4 . '.json', $getstatus2);
 	}
-	unlink($_filepath);
 	$filepath = '/converted/' . $video_mp4;
-	$status = ($convert_status['mp4'] === 0) ? 'success' : 'failed';
+	$status = ($convert_status['mp4'] === 0) ? 'done' : 'failed';
 	$arr = array('convertedvideo' => $filepath, 'convertingstatus' => $status);
 	
 	header('Content-type: application/json; charset=utf-8');
 	
 	echo json_encode($arr);
-
+	
 	exit();
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
 ?>
@@ -106,7 +111,7 @@ if(isset($_POST['upload_form'])) {
 			let status = $('#status');
 			
 			$('#form').ajaxForm({
-				beforeSend: function() {
+				beforeSend: () => {
 					status.empty();
 					let percentVal = '0%';
 					bar.width(percentVal);
@@ -116,7 +121,7 @@ if(isset($_POST['upload_form'])) {
 					}
 					$('input[type=submit]').css('display', 'none');
 				},
-				uploadProgress: function(event, position, total, percentComplete) {
+				uploadProgress: (event, position, total, percentComplete) => {
 					let percentVal;
 					if (percentComplete !== 100) {
 						percentVal = percentComplete + '%';
@@ -127,31 +132,53 @@ if(isset($_POST['upload_form'])) {
 					}
 					percent.html('<p>' + percentVal + '</p>');
 				},
-				complete: function(xhr) {
+				complete: (xhr) => {
 					let response = JSON.parse(xhr.responseText);
 					$('#percent').css('display', 'none');
+					let fileInput = document.querySelector('input[type=file]');
+					let path = fileInput.value;
+					let fileName = path.split(/(\\|\/)/g).pop();
 					if (response.convertingstatus == 'failed') {
-						return status.html('<p style="text-align:center;width:100%;font-size:21px;font-weight:600px;">Failed: ' + response.convertedvideo + '</p>');
+						return status.html('<p style="text-align:center;width:100%;font-size:21px;font-weight:600px;">Failed: ' + fileName + ' has failed the conversion :(</p>');
 					} else {
 						return status.html('<a class="download" href="#" download="' + response.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
 					}
 				},
-				error: function(xhr) {
-					let response = JSON.parse(xhr.responseText);
-					let convertingstatus = setInterval(function() {
-						$.get('/converted/<?php echo $video_mp4;?>.php', function(data) {
-							let response2 = JSON.parse(data.responseText);
-							if (response2.convertingstatus == 'converting') {
-								
-							} else if (response2.convertingstatus == 'success') {
-								clearInterval(convertingstatus);
-								$('#percent').css('display', 'none');
-								return status.html('<a class="download" href="#" download="' + response2.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response2.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
-							} else {
-								status.html('<p>Something went wrong: UNKOWN ERROR</p>');
-							}
+				error: () => {
+					
+				},
+				statusCode: {
+					524: () => {
+					let fileInput = document.querySelector('input[type=file]');
+					let path = fileInput.value;
+					let fileName = path.split(/(\\|\/)/g).pop();
+					let interval;
+					function getConvertingStatus() {
+						$.ajax({
+							type: "GET",
+							url: '/converted/' + fileName + '.json',
+							complete: (data) => {
+								console.log(data);
+								if (data.convertingstatus == 'done') {
+									$('#percent').css('display', 'none');
+									return status.html('<a class="download" href="#" download="' + data.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + data.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
+									clearTimeout(interval);
+								} else if (data.convertingstatus == 'converting') {
+									interval = setTimeout(getConvertingStatus, 5000);
+									console.log('Still converting...');
+								} else if (data.convertingstatus == 'failed') {
+									$('#percent').css('display', 'none');
+									return status.html('<a class="download" href="#" download="' + data.convertedvideo + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + data.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
+								} else {
+									console.log('no');
+									status.html('<p>Something went wrong: UNKOWN ERROR</p>');
+								}
+							},
+							dataType: "json"
 						});
-					}, 5000);
+					}
+					getConvertingStatus();
+				}
 				}
 			});
 			
