@@ -106,7 +106,6 @@ if(isset($_POST['upload_form'])) {
 		<div id="percent"></div>
 		<div id="status"></div>
 		<script type="text/javascript">
-			//$(document).on('load', function() {
 			let bar = $('#bar');
 			let percent = $('#percent');
 			let status = $('#status');
@@ -151,15 +150,23 @@ if(isset($_POST['upload_form'])) {
 					
 				},
 				statusCode: {
+					504: () => {
+						interval = setInterval(getConvertingStatus, 5000);
+					}
+				},
+				statusCode: {
+					522: () => {
+						interval = setInterval(getConvertingStatus, 5000);
+					}
+				},
+				statusCode: {
 					524: () => {
-						//timeout_ = '1';
 						interval = setInterval(getConvertingStatus, 5000);
 					}
 				}
 			});
 			
 			function getConvertingStatus() {
-				//if (timeout_ === '1') {
 					$.ajax({
 						type: "GET",
 						url: '/converted/' + document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop() + '.json',
@@ -195,7 +202,6 @@ if(isset($_POST['upload_form'])) {
 					$('#form').submit();
 				}
 			});
-			//});
 		</script>
 	</body>
 </html>
