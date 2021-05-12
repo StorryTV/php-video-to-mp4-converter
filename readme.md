@@ -34,10 +34,10 @@ sudo apt install ffmpeg
 
 ## Installation
 
-No installation besides the above needed. Just make sure you have the right file permission on the **original** and **converted** folders.
+No installation besides the above needed. Just make sure you have the right file permissions.
 
 ```bash
-sudo chmod -R 775 ./original ./converted
+sudo chmod -R 775 ./original ./converted && sudo chmod 770 ./cleanup.php
 ```
 
 ## Automatic cleanup
@@ -49,5 +49,5 @@ sudo crontab -e
 
 Paste the following at the end of the file (just make sure the path is where your app is located):
 ```bash
-0 * * * * /var/www/html/cleanup.sh
+0 * * * * /var/www/html/cleanup.php
 ```
