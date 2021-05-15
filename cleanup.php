@@ -27,4 +27,6 @@ foreach (glob($dir2."*.*") as $file) {
 	}
 }
 
+exit();
+
 ?>
