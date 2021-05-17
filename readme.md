@@ -44,12 +44,4 @@ sudo chmod -R 775 ./original ./converted && sudo chmod 770 ./cleanup.php && sudo
 
 ## Automatic cleanup
 
-You can also make a cronjob to automatically delete uploaded and converted videos older than 1 day if you want.
-```bash
-sudo crontab -e
-```
-
-Paste the following at the end of the file (just make sure the path is where your app is located):
-```bash
-0 * * * * /var/www/html/cleanup.php
-```
+The script (cleanup.php) checks for files older than a day and deletes them automatically
