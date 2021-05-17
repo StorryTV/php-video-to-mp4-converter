@@ -1,5 +1,7 @@
 <?php
 
+include(realpath(getenv('DOCUMENT_ROOT')) . '/cleanup.php');
+
 if(isset($_POST['upload_form'])) {
 	if (!isset($_FILES['file'])) {
 		$status = 'failed';
