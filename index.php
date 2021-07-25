@@ -153,7 +153,7 @@ if(isset($_POST['upload_form'])) {
 							return status.html('<p style="text-align:center;width:100%;font-size:21px;font-weight:600px;">Failed: ' + fileName + ' has failed the conversion :(</p>');
 						} else {
 							//return status.html('<a class="download" href="' + response.convertedvideo + '" download="' + fileName + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
-							return status.html('<a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" download><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" target="_blank"><button>Open video in a new tab</button></a>');
+							return status.html('<a class="download" href="' + response.convertedvideo + '" download="' + response.ipfsname + '"><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" target="_blank"><button>Open video in a new tab</button></a>');
 						}
 					} catch(e) {
 						interval = setInterval(getConvertingStatus, 5000);
@@ -189,14 +189,14 @@ if(isset($_POST['upload_form'])) {
 							$('#percent').css('display', 'none');
 							clearInterval(interval);
 							//return status.html('<a class="download" href="/converted/' + downloadurl + '" download><button>Download Video</button></a><br/><br/><a class="download" href="/converted/' + downloadurl + '" target="_blank"><button>Open video in a new tab</button></a>');
-							return status.html('<a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" download><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" target="_blank"><button>Open video in a new tab</button></a>');
+							return status.html('<a class="download" href="' + response.convertedvideo + '" download="' + response.ipfsname + '"><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" target="_blank"><button>Open video in a new tab</button></a>');
 						} else if (response.convertingstatus == 'converting') {
 							console.log('Still converting...');
 						} else if (response.convertingstatus == 'failed') {
 							$('#percent').css('display', 'none');
 							clearInterval(interval);
 							//return status.html('<a class="download" href="' + response.convertedvideo + '" download><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
-							return status.html('<a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" download><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" target="_blank"><button>Open video in a new tab</button></a>');
+							return status.html('<a class="download" href="' + response.convertedvideo + '" download="' + response.ipfsname + '"><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" target="_blank"><button>Open video in a new tab</button></a>');
 						} else {
 							console.log('no');
 							status.html('<p>Something went wrong: UNKOWN ERROR</p>');
