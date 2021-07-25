@@ -1,6 +1,6 @@
 # Converting video files to MP4
 
-This simple script uploads a video file and converts it with **ffmpeg** to **mp4** format.
+This simple script uploads a video file and converts it with **ffmpeg** to **mp4** format, then uploads it to **IPFS** from which the client can download and use the converted video.
 
 Cheers!
 
