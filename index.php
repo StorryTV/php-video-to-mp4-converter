@@ -50,11 +50,11 @@ if(isset($_POST['upload_form'])) {
 		$arr2 = array('convertedvideo' => $filepath, 'convertingstatus' => $status2);
 		$status_arr = json_encode($arr);
 		$status_arr2 = json_encode($arr2);
-		$getstatus1 = var_export($status_arr, true);
-		file_put_contents('./converted/' . $video_mp4 . '.json', $getstatus1);
+		//$getstatus1 = var_export($status_arr, true);
+		file_put_contents('./converted/' . $video_mp4 . '.json', $status_arr);
 		exec($ffmpeg . ' -i "' . $uploaded_file . '" -preset slow -c:v libx264 -c:a copy "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
-		$getstatus2 = var_export($status_arr2, true);
-		file_put_contents('./converted/' . $video_mp4 . '.json', $getstatus2);
+		//$getstatus2 = var_export($status_arr2, true);
+		file_put_contents('./converted/' . $video_mp4 . '.json', $status_arr2);
 	}
 	$filepath = '/converted/' . $video_mp4;
 	$status = ($convert_status['mp4'] === 0) ? 'done' : 'failed';
@@ -114,6 +114,7 @@ if(isset($_POST['upload_form'])) {
 			let interval;
 			
 			$('#form').ajaxForm({
+				dataType: "json",
 				beforeSend: () => {
 					status.empty();
 					let percentVal = '0%';
@@ -135,63 +136,65 @@ if(isset($_POST['upload_form'])) {
 					}
 					percent.html('<p>' + percentVal + '</p>');
 				},
-				complete: (xhr) => {
-					let response = JSON.parse(xhr.responseText);
-					$('#percent').css('display', 'none');
-					let fileInput = document.querySelector('input[type=file]');
-					let path = fileInput.value;
-					let fileName = path.split(/(\\|\/)/g).pop();
-					if (response.convertingstatus == 'failed') {
-						return status.html('<p style="text-align:center;width:100%;font-size:21px;font-weight:600px;">Failed: ' + fileName + ' has failed the conversion :(</p>');
-					} else {
-						return status.html('<a class="download" href="' + response.convertedvideo + '" download="' + fileName + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
+				success: (data) => {
+					try {
+						//let response = JSON.parse(data.responseText);
+						let response = data;
+						$('#percent').css('display', 'none');
+						let fileInput = document.querySelector('input[type=file]');
+						let path = fileInput.value;
+						let fileName = path.split(/(\\|\/)/g).pop();
+						if (response.convertingstatus == 'failed') {
+							return status.html('<p style="text-align:center;width:100%;font-size:21px;font-weight:600px;">Failed: ' + fileName + ' has failed the conversion :(</p>');
+						} else {
+							return status.html('<a class="download" href="' + response.convertedvideo + '" download="' + fileName + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
+						}
+					} catch(e) {
+						interval = setInterval(getConvertingStatus, 5000);
 					}
 				},
-				error: () => {
+				error: (xhr) => {
 					
 				},
 				statusCode: {
 					504: () => {
 						interval = setInterval(getConvertingStatus, 5000);
-					}
-				},
-				statusCode: {
+					},
 					522: () => {
 						interval = setInterval(getConvertingStatus, 5000);
-					}
-				},
-				statusCode: {
+					},
 					524: () => {
 						interval = setInterval(getConvertingStatus, 5000);
 					}
 				}
 			});
 			
-			function getConvertingStatus() {
+			const getConvertingStatus = () => {
 				let downloadurl = document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop().replace(document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop().split('.').pop(), 'mp4');
-					$.ajax({
-						type: 'GET',
-						url: '/converted/' + downloadurl + '.json',
-						cache: false,
-						dataType: 'json',
-						complete: (data) => {
-							console.log(data);
-							if (JSON.parse((data.responseText).replace("'", "").replace("'", "")).convertingstatus == 'done') {
-								$('#percent').css('display', 'none');
-								clearInterval(interval);
-								return status.html('<a class="download" href="/converted/' + downloadurl + '" download><button>Download Video</button></a><br/><br/><a class="download" href="/converted/' + downloadurl + '" target="_blank"><button>Open video in a new tab</button></a>');
-							} else if (JSON.parse((data.responseText).replace("'", "").replace("'", "")).convertingstatus == 'converting') {
-								console.log('Still converting...');
-							} else if (JSON.parse((data.responseText).replace("'", "").replace("'", "")).convertingstatus == 'failed') {
-								$('#percent').css('display', 'none');
-								clearInterval(interval);
-								return status.html('<a class="download" href="' + data.convertedvideo + '" download><button>Download Video</button></a><br/><br/><a class="download" href="' + data.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
-							} else {
-								console.log('no');
-								status.html('<p>Something went wrong: UNKOWN ERROR</p>');
-							}
+				$.ajax({
+					type: 'GET',
+					url: '/converted/' + downloadurl + '.json',
+					cache: false,
+					dataType: 'json',
+					complete: (data) => {
+						let response = data.responseJSON;
+						console.log(response);
+						if (response.convertingstatus == 'done') {
+							$('#percent').css('display', 'none');
+							clearInterval(interval);
+							return status.html('<a class="download" href="/converted/' + downloadurl + '" download><button>Download Video</button></a><br/><br/><a class="download" href="/converted/' + downloadurl + '" target="_blank"><button>Open video in a new tab</button></a>');
+						} else if (response.convertingstatus == 'converting') {
+							console.log('Still converting...');
+						} else if (response.convertingstatus == 'failed') {
+							$('#percent').css('display', 'none');
+							clearInterval(interval);
+							return status.html('<a class="download" href="' + response.convertedvideo + '" download><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
+						} else {
+							console.log('no');
+							status.html('<p>Something went wrong: UNKOWN ERROR</p>');
 						}
-					});
+					}
+				});
 			}
 			
 			$('input[name=file]').on('change', function() {
