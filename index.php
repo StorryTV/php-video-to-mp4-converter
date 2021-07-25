@@ -53,12 +53,17 @@ if(isset($_POST['upload_form'])) {
 		//$getstatus1 = var_export($status_arr, true);
 		file_put_contents('./converted/' . $video_mp4 . '.json', $status_arr);
 		exec($ffmpeg . ' -i "' . $uploaded_file . '" -preset slow -c:v libx264 -c:a copy "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
+		exec('curl "https://ipfs.infura.io:5001/api/v0/add?stream-channels=true&recursive=false&pin=true&wrap-with-directory=false&progress=false" \
+			-X POST \
+			-H "Content-Type: multipart/form-data" \
+			-F file=@"' . getcwd() . '/'. $uploaded_file. '"', $output, $ipfs_upload);
 		//$getstatus2 = var_export($status_arr2, true);
 		file_put_contents('./converted/' . $video_mp4 . '.json', $status_arr2);
 	}
+	$ipfshash = json_decode($output['0'], true);
 	$filepath = '/converted/' . $video_mp4;
 	$status = ($convert_status['mp4'] === 0) ? 'done' : 'failed';
-	$arr = array('convertedvideo' => $filepath, 'convertingstatus' => $status);
+	$arr = array('convertedvideo' => $filepath, 'convertingstatus' => $status, 'ipfshash' => $ipfshash['Hash'], 'ipfsname' => $ipfshash['Name'], 'ipfssize' => $ipfshash['Size'], 'ipfs' => $output);
 	
 	header('Content-type: application/json; charset=utf-8');
 	
@@ -147,7 +152,8 @@ if(isset($_POST['upload_form'])) {
 						if (response.convertingstatus == 'failed') {
 							return status.html('<p style="text-align:center;width:100%;font-size:21px;font-weight:600px;">Failed: ' + fileName + ' has failed the conversion :(</p>');
 						} else {
-							return status.html('<a class="download" href="' + response.convertedvideo + '" download="' + fileName + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
+							//return status.html('<a class="download" href="' + response.convertedvideo + '" download="' + fileName + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
+							return status.html('<a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" download><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" target="_blank"><button>Open video in a new tab</button></a>');
 						}
 					} catch(e) {
 						interval = setInterval(getConvertingStatus, 5000);
@@ -182,13 +188,15 @@ if(isset($_POST['upload_form'])) {
 						if (response.convertingstatus == 'done') {
 							$('#percent').css('display', 'none');
 							clearInterval(interval);
-							return status.html('<a class="download" href="/converted/' + downloadurl + '" download><button>Download Video</button></a><br/><br/><a class="download" href="/converted/' + downloadurl + '" target="_blank"><button>Open video in a new tab</button></a>');
+							//return status.html('<a class="download" href="/converted/' + downloadurl + '" download><button>Download Video</button></a><br/><br/><a class="download" href="/converted/' + downloadurl + '" target="_blank"><button>Open video in a new tab</button></a>');
+							return status.html('<a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" download><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" target="_blank"><button>Open video in a new tab</button></a>');
 						} else if (response.convertingstatus == 'converting') {
 							console.log('Still converting...');
 						} else if (response.convertingstatus == 'failed') {
 							$('#percent').css('display', 'none');
 							clearInterval(interval);
-							return status.html('<a class="download" href="' + response.convertedvideo + '" download><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
+							//return status.html('<a class="download" href="' + response.convertedvideo + '" download><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
+							return status.html('<a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" download><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" target="_blank"><button>Open video in a new tab</button></a>');
 						} else {
 							console.log('no');
 							status.html('<p>Something went wrong: UNKOWN ERROR</p>');
