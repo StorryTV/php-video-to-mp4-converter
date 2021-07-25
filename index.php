@@ -1,7 +1,5 @@
 <?php
 
-include(realpath(getenv('DOCUMENT_ROOT')) . '/cleanup.php');
-
 if(isset($_POST['upload_form'])) {
 	if (!isset($_FILES['file'])) {
 		$status = 'failed';
@@ -68,6 +66,7 @@ if(isset($_POST['upload_form'])) {
 	
 	exit();
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
+	include(realpath(getenv('DOCUMENT_ROOT')) . '/cleanup.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -171,9 +170,10 @@ if(isset($_POST['upload_form'])) {
 			function getConvertingStatus() {
 				let downloadurl = document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop().replace(document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop().split('.').pop(), 'mp4');
 					$.ajax({
-						type: "GET",
+						type: 'GET',
 						url: '/converted/' + downloadurl + '.json',
 						cache: false,
+						dataType: 'json',
 						complete: (data) => {
 							console.log(data);
 							if (JSON.parse((data.responseText).replace("'", "").replace("'", "")).convertingstatus == 'done') {
@@ -190,8 +190,7 @@ if(isset($_POST['upload_form'])) {
 								console.log('no');
 								status.html('<p>Something went wrong: UNKOWN ERROR</p>');
 							}
-						},
-						dataType: "json"
+						}
 					});
 			}
 			
