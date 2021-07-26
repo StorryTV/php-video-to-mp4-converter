@@ -3,6 +3,9 @@
 // Make sure to get the correct path to ffmpeg
 // Run "whereis ffmpeg" in your terminal to get the correct path (the first of the results is usually the correct one)
 $ffmpeg = '/usr/bin/ffmpeg';
+// Choose how many threads per ffmpeg conversion you want to use (leave it at: '1', for free cores and more parallel conversions).
+// Set to: 'MAX', for max cpu usage and faster conversions, but no parallel conversions.
+$ffmpeg_threads = '1';
 //Default IPFS below can be changed to your own IPFS node
 $ipfsapi = array(
 	'protocol' => 'https',
@@ -64,7 +67,16 @@ if(isset($_POST['upload_form'])) {
 		);
 		$status_arr = json_encode($arr);
 		file_put_contents('./converted/' . $video_mp4 . '.json', $status_arr);
-		exec($ffmpeg . ' -i "' . $uploaded_file . '" -preset slow -c:v libx264 -c:a copy "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
+		if ($ffmpeg_threads === 'MAX') {
+			$ffmpeg_threads = '';
+		} else {
+			$ffmpeg_threads = '1';
+		}
+		if (strpos($threads, '.') !== false) {
+			$ffmpeg_threads = explode('.', $ffmpeg_threads)[0];
+		}
+		$ffmpeg_threads = ' -threads ' . $ffmpeg_threads;
+		exec($ffmpeg . ' -i "' . $uploaded_file . '" -preset slow -c:v libx264 -c:a copy' . $ffmpeg_threads . ' "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
 		$arr1 = array(
 			'convertedvideo' => $filepath,
 			'convertingstatus' => 'uploading_to_ipfs',
@@ -165,7 +177,6 @@ if(isset($_POST['upload_form'])) {
 				},
 				success: (data) => {
 					try {
-						//let response = JSON.parse(data.responseText);
 						let response = data;
 						$('#percent').css('display', 'none');
 						let fileInput = document.querySelector('input[type=file]');
@@ -174,7 +185,6 @@ if(isset($_POST['upload_form'])) {
 						if (response.convertingstatus == 'failed') {
 							return status.html('<p style="text-align:center;width:100%;font-size:21px;font-weight:600px;">Failed: ' + fileName + ' has failed the conversion :(</p>');
 						} else {
-							//return status.html('<a class="download" href="' + response.convertedvideo + '" download="' + fileName + '"><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
 							return status.html('<a class="download" href="' + response.convertedvideo + '" download="' + response.ipfsname + '"><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" target="_blank"><button>Open video in a new tab</button></a>');
 						}
 					} catch(e) {
@@ -198,6 +208,10 @@ if(isset($_POST['upload_form'])) {
 			});
 			
 			const getConvertingStatus = () => {
+				let fileInput = document.querySelector('input[type=file]');
+				let path = fileInput.value;
+				let fileName = path.split(/(\\|\/)/g).pop();
+				let percentVal;
 				let downloadurl = document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop().replace(document.querySelector('input[type=file]').value.split(/(\\|\/)/g).pop().split('.').pop(), 'mp4');
 				$.ajax({
 					type: 'GET',
@@ -210,15 +224,17 @@ if(isset($_POST['upload_form'])) {
 						if (response.convertingstatus == 'done') {
 							$('#percent').css('display', 'none');
 							clearInterval(interval);
-							//return status.html('<a class="download" href="/converted/' + downloadurl + '" download><button>Download Video</button></a><br/><br/><a class="download" href="/converted/' + downloadurl + '" target="_blank"><button>Open video in a new tab</button></a>');
 							return status.html('<a class="download" href="' + response.convertedvideo + '" download="' + response.ipfsname + '"><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" target="_blank"><button>Open video in a new tab</button></a>');
 						} else if (response.convertingstatus == 'converting') {
 							console.log('Still converting...');
+						} else if (response.convertingstatus == 'uploading_to_ipfs') {
+							console.log('Uploading to IPFS...');
+							percentVal = '<svg width="30" height="10" viewBox="0 0 120 30" xmlns="http://www.w3.org/2000/svg" fill="#7100e2"><circle cx="15" cy="15" r="15"><animate attributeName="r" from="15" to="15" begin="0s" dur="0.8s" values="15;9;15" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="0.8s" values="1;.5;1" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="60" cy="15" r="9" fill-opacity="0.3"><animate attributeName="r" from="9" to="9" begin="0s" dur="0.8s" values="9;15;9" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="0.5" to="0.5" begin="0s" dur="0.8s" values=".5;1;.5" calcMode="linear" repeatCount="indefinite" /></circle><circle cx="105" cy="15" r="15"><animate attributeName="r" from="15" to="15" begin="0s" dur="0.8s" values="15;9;15" calcMode="linear" repeatCount="indefinite" /><animate attributeName="fill-opacity" from="1" to="1" begin="0s" dur="0.8s" values="1;.5;1" calcMode="linear" repeatCount="indefinite" /></circle></svg><p>Processing Video</p>';
+							percent.html('<p>' + percentVal + '</p>');
 						} else if (response.convertingstatus == 'failed') {
 							$('#percent').css('display', 'none');
 							clearInterval(interval);
-							//return status.html('<a class="download" href="' + response.convertedvideo + '" download><button>Download Video</button></a><br/><br/><a class="download" href="' + response.convertedvideo + '" target="_blank"><button>Open video in a new tab</button></a>');
-							return status.html('<a class="download" href="' + response.convertedvideo + '" download="' + response.ipfsname + '"><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" target="_blank"><button>Open video in a new tab</button></a>');
+							return status.html('<p style="text-align:center;width:100%;font-size:21px;font-weight:600px;">Failed: ' + fileName + ' has failed the conversion :(</p>');
 						} else {
 							console.log('no');
 							status.html('<p>Something went wrong: UNKOWN ERROR</p>');
