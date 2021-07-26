@@ -55,7 +55,7 @@ if(isset($_POST['upload_form'])) {
 		exit();
 	}
 	$uploads_dir = 'original/';
-	$file_name = basename($_FILES['file']['name']);
+	$file_name = urlencode(basename($_FILES['file']['name']));
 	$output_name = substr($file_name, 0 , (strrpos($file_name, '.')));
 	$uploaded_file = $uploads_dir . $file_name;
 	$convert_status = ['mp4' => 0];
@@ -71,13 +71,15 @@ if(isset($_POST['upload_form'])) {
 			$ffmpeg_threads = '';
 		} elseif (strpos($threads, '.') !== false) {
 			$ffmpeg_threads = explode('.', $ffmpeg_threads)[0];
+		} elseif ($ffmpeg_threads === '0') {
+			$ffmpeg_threads = '0';
 		} else {
 			$ffmpeg_threads = '1';
 		}
 		if ($ffmpeg_threads !== '') {
 			$ffmpeg_threads = ' -threads ' . $ffmpeg_threads;
 		}
-		exec($ffmpeg . ' -i "' . $uploaded_file . '" -preset slow -c:v libx264 -c:a copy' . $ffmpeg_threads . ' "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
+		exec($ffmpeg . ' -i "' . $uploaded_file . '" -preset slow -c:v libx264 -profile:v baseline -level 3.0 -movflags +faststart -c:a copy' . $ffmpeg_threads . ' "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
 		$arr1 = array(
 			'convertedvideo' => $filepath,
 			'convertingstatus' => 'uploading_to_ipfs',
