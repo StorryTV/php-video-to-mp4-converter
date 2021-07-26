@@ -1,9 +1,21 @@
 <?php
 
+// Make sure to get the correct path to ffmpeg
+// Run "whereis ffmpeg" in your terminal to get the correct path (the first of the results is usually the correct one)
+$ffmpeg = '/usr/bin/ffmpeg';
+//Default IPFS below can be changed to your own IPFS node
+$ipfsapi = array(
+	'protocol' => 'https',
+	'host' => 'ipfs.infura.io',
+	'port' => '5001',
+);
+
 if(isset($_POST['upload_form'])) {
 	if (!isset($_FILES['file'])) {
-		$status = 'failed';
-		$arr = array('convertedvideo' => 'There is no file', 'convertingstatus' => $status);
+		$arr = array(
+			'convertedvideo' => 'There is no file',
+			'convertingstatus' => 'failed',
+		);
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode($arr);
 		exit();
@@ -13,22 +25,28 @@ if(isset($_POST['upload_form'])) {
 	$_fileinfo = finfo_open(FILEINFO_MIME_TYPE);
 	$_filetype = finfo_file($_fileinfo, $_filepath);
 	if ($_fileSize === 0) { // Check if file is empty
-		$status = 'failed';
-		$arr = array('convertedvideo' => 'The file is empty', 'convertingstatus' => $status);
+		$arr = array(
+			'convertedvideo' => 'The file is empty',
+			'convertingstatus' => 'failed',
+		);
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode($arr);
 		exit();
 	}
 	if ($_fileSize > 104857600) { // Check if file is bigger than 100MB
-		$status = 'failed';
-		$arr = array('convertedvideo' => 'The file is too large', 'convertingstatus' => $status);
+		$arr = array(
+			'convertedvideo' => 'The file is too large',
+			'convertingstatus' => 'failed',
+		);
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode($arr);
 		exit();
 	}
 	if (substr($_filetype, 0, 5 ) !== 'video') { // Check if it is really a video
-		$status = 'failed';
-		$arr = array('convertedvideo' => 'File not allowed.', 'convertingstatus' => $status);
+		$arr = array(
+			'convertedvideo' => 'File not allowed.',
+			'convertingstatus' => 'failed',
+		);
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode($arr);
 		exit();
@@ -38,37 +56,41 @@ if(isset($_POST['upload_form'])) {
 	$output_name = substr($file_name, 0 , (strrpos($file_name, '.')));
 	$uploaded_file = $uploads_dir . $file_name;
 	$convert_status = ['mp4' => 0];
-	if(move_uploaded_file($_FILES['file']['tmp_name'], $uploaded_file)) {
-		// Make sure to get the correct path to ffmpeg
-		// Run "whereis ffmpeg" in your terminal to get the correct path (the first of the results is usually the correct one)
-		$ffmpeg = '/usr/bin/ffmpeg';
+	if (move_uploaded_file($_FILES['file']['tmp_name'], $uploaded_file)) {
 		$video_mp4 = $output_name . '.mp4';
 		$filepath = '/converted/' . $video_mp4;
-		$status = 'converting';
-		$status2 = 'done';
-		$arr = array('convertingstatus' => $status);
-		$arr2 = array('convertedvideo' => $filepath, 'convertingstatus' => $status2);
+		$arr = array(
+			'convertingstatus' => 'converting',
+		);
 		$status_arr = json_encode($arr);
-		$status_arr2 = json_encode($arr2);
-		//$getstatus1 = var_export($status_arr, true);
 		file_put_contents('./converted/' . $video_mp4 . '.json', $status_arr);
 		exec($ffmpeg . ' -i "' . $uploaded_file . '" -preset slow -c:v libx264 -c:a copy "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
-		exec('curl "https://ipfs.infura.io:5001/api/v0/add?stream-channels=true&recursive=false&pin=true&wrap-with-directory=false&progress=false" \
+		$arr1 = array(
+			'convertedvideo' => $filepath,
+			'convertingstatus' => 'uploading_to_ipfs',
+		);
+		$status_arr1 = json_encode($arr1);
+		file_put_contents('./converted/' . $video_mp4 . '.json', $status_arr1);
+		exec('curl "' . $ipfsapi['protocol'] . '://' . $ipfsapi['host'] . ':' . $ipfsapi['port'] . '/api/v0/add?stream-channels=true&recursive=false&pin=true&wrap-with-directory=false&progress=false" \
 			-X POST \
 			-H "Content-Type: multipart/form-data" \
-			-F file=@"' . getcwd() . '/'. $uploaded_file. '"', $output, $ipfs_upload);
-		//$getstatus2 = var_export($status_arr2, true);
+			-F file=@"' . realpath(getenv('DOCUMENT_ROOT')) . '/'. $uploaded_file. '"', $output, $ipfs_upload);
+		$ipfs = json_decode($output['0'], true);
+		$filepath = '/converted/' . $video_mp4;
+		$status = ($convert_status['mp4'] === 0) ? 'done' : 'failed';
+		$arr2 = array(
+			'convertedvideo' => $filepath,
+			'convertingstatus' => $status,
+			'ipfshash' => $ipfs['Hash'],
+			'ipfsname' => $ipfs['Name'],
+			'ipfssize' => $ipfs['Size'],
+			'ipfs' => $output,
+		);
+		$status_arr2 = json_encode($arr2);
 		file_put_contents('./converted/' . $video_mp4 . '.json', $status_arr2);
+		header('Content-type: application/json; charset=utf-8');
+		echo json_encode($arr2);
 	}
-	$ipfshash = json_decode($output['0'], true);
-	$filepath = '/converted/' . $video_mp4;
-	$status = ($convert_status['mp4'] === 0) ? 'done' : 'failed';
-	$arr = array('convertedvideo' => $filepath, 'convertingstatus' => $status, 'ipfshash' => $ipfshash['Hash'], 'ipfsname' => $ipfshash['Name'], 'ipfssize' => $ipfshash['Size'], 'ipfs' => $output);
-	
-	header('Content-type: application/json; charset=utf-8');
-	
-	echo json_encode($arr);
-	
 	exit();
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
 	include(realpath(getenv('DOCUMENT_ROOT')) . '/cleanup.php');
