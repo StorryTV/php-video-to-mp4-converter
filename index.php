@@ -69,13 +69,14 @@ if(isset($_POST['upload_form'])) {
 		file_put_contents('./converted/' . $video_mp4 . '.json', $status_arr);
 		if ($ffmpeg_threads === 'MAX') {
 			$ffmpeg_threads = '';
+		} elseif (strpos($threads, '.') !== false) {
+			$ffmpeg_threads = explode('.', $ffmpeg_threads)[0];
 		} else {
 			$ffmpeg_threads = '1';
 		}
-		if (strpos($threads, '.') !== false) {
-			$ffmpeg_threads = explode('.', $ffmpeg_threads)[0];
+		if ($ffmpeg_threads !== '') {
+			$ffmpeg_threads = ' -threads ' . $ffmpeg_threads;
 		}
-		$ffmpeg_threads = ' -threads ' . $ffmpeg_threads;
 		exec($ffmpeg . ' -i "' . $uploaded_file . '" -preset slow -c:v libx264 -c:a copy' . $ffmpeg_threads . ' "./converted/' . $video_mp4 . '" -y 1>log.txt 2>&1', $output, $convert_status['mp4']);
 		$arr1 = array(
 			'convertedvideo' => $filepath,
