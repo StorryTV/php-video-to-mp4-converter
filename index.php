@@ -73,7 +73,7 @@ if(isset($_POST['upload_form'])) {
 			'convertingstatus' => 'converting',
 		);
 		$status_arr = json_encode($arr);
-		file_put_contents('./converted/' . $video_mp4 . '.json', $status_arr);
+		file_put_contents('./converted/' . rawurldecode($video_mp4) . '.json', $status_arr);
 		if ($ffmpeg_threads === 'MAX') {
 			$ffmpeg_threads = '';
 		} elseif (strpos($threads, '.') !== false) {
@@ -92,11 +92,12 @@ if(isset($_POST['upload_form'])) {
 			'convertingstatus' => 'uploading_to_ipfs',
 		);
 		$status_arr1 = json_encode($arr1);
-		file_put_contents('./converted/' . $video_mp4 . '.json', $status_arr1);
+		file_put_contents('./converted/' . rawurldecode($video_mp4) . '.json', $status_arr1);
 		exec('curl "' . $ipfsapi['protocol'] . '://' . $ipfsapi['host'] . ':' . $ipfsapi['port'] . '/api/v0/add?stream-channels=true&recursive=false&pin=true&wrap-with-directory=false&progress=false" \
 			-X POST \
 			-H "Content-Type: multipart/form-data" \
 			-F file=@"' . realpath(getenv('DOCUMENT_ROOT')) . '/'. $uploaded_file. '"', $output, $ipfs_upload);
+		rename(realpath(getenv('DOCUMENT_ROOT')) . $filepath, realpath(getenv('DOCUMENT_ROOT')) . rawurldecode($filepath));
 		$ipfs = json_decode($output['0'], true);
 		$filepath = '/converted/' . $video_mp4;
 		$status = ($convert_status['mp4'] === 0) ? 'done' : 'failed';
@@ -109,7 +110,7 @@ if(isset($_POST['upload_form'])) {
 			'ipfs' => $output,
 		);
 		$status_arr2 = json_encode($arr2);
-		file_put_contents('./converted/' . $video_mp4 . '.json', $status_arr2);
+		file_put_contents('./converted/' . rawurldecode($video_mp4) . '.json', $status_arr2);
 		header('Content-type: application/json; charset=utf-8');
 		echo json_encode($arr2);
 	}
