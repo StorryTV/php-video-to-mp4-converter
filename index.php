@@ -20,7 +20,6 @@ $ipfsapi = array(
 	'port' => '5001',
 );
 
-
 if(isset($_POST['upload_form'])) {
 	if (!isset($_FILES['file'])) {
 		$arr = array(
@@ -196,7 +195,7 @@ if(isset($_POST['upload_form'])) {
 						if (response.convertingstatus == 'failed') {
 							return status.html('<p style="text-align:center;width:100%;font-size:21px;font-weight:600px;">Failed: ' + fileName + ' has failed the conversion :(</p>');
 						} else {
-							return status.html('<a class="download" href="' + decodeURIComponent(response.convertedvideo) + '" download="' + decodeURIComponent(response.ipfsname) + '"><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + decodeURIComponent(response.ipfsname) + '" target="_blank"><button>Open video in a new tab</button></a>');
+							return status.html('<a class="download" href="' + response.convertedvideo + '" download="' + decodeURIComponent(response.ipfsname) + '"><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + decodeURIComponent(response.ipfsname) + '" target="_blank"><button>Open video in a new tab</button></a>');
 						}
 					} catch(e) {
 						interval = setInterval(getConvertingStatus, 5000);
@@ -235,7 +234,7 @@ if(isset($_POST['upload_form'])) {
 						if (response.convertingstatus == 'done') {
 							$('#percent').css('display', 'none');
 							clearInterval(interval);
-							return status.html('<a class="download" href="' + decodeURIComponent(response.convertedvideo) + '" download="' + decodeURIComponent(response.ipfsname) + '"><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + decodeURIComponent(response.ipfsname) + '" target="_blank"><button>Open video in a new tab</button></a>');
+							return status.html('<a class="download" href="' + response.convertedvideo + '" download="' + decodeURIComponent(response.ipfsname) + '"><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + decodeURIComponent(response.ipfsname) + '" target="_blank"><button>Open video in a new tab</button></a>');
 						} else if (response.convertingstatus == 'converting') {
 							console.log('Still converting...');
 						} else if (response.convertingstatus == 'uploading_to_ipfs') {
