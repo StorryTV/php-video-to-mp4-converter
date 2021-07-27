@@ -3,15 +3,23 @@
 // Make sure to get the correct path to ffmpeg
 // Run "whereis ffmpeg" in your terminal to get the correct path (the first of the results is usually the correct one)
 $ffmpeg = '/usr/bin/ffmpeg';
+
 // Choose how many threads per ffmpeg conversion you want to use (leave it at: '1', for free cores and more parallel conversions).
 // Set to: 'MAX', for max cpu usage and faster conversions, but no parallel conversions.
 $ffmpeg_threads = '1';
+
 //Default IPFS below can be changed to your own IPFS node
+//$ipfsapi = array(
+//	'protocol' => 'http',
+//	'host' => '127.0.0.1',
+//	'port' => '5001',
+//);
 $ipfsapi = array(
 	'protocol' => 'https',
 	'host' => 'ipfs.infura.io',
 	'port' => '5001',
 );
+
 
 if(isset($_POST['upload_form'])) {
 	if (!isset($_FILES['file'])) {
@@ -55,7 +63,7 @@ if(isset($_POST['upload_form'])) {
 		exit();
 	}
 	$uploads_dir = 'original/';
-	$file_name = urlencode(basename($_FILES['file']['name']));
+	$file_name = rawurlencode(basename($_FILES['file']['name']));
 	$output_name = substr($file_name, 0 , (strrpos($file_name, '.')));
 	$uploaded_file = $uploads_dir . $file_name;
 	$convert_status = ['mp4' => 0];
@@ -188,7 +196,7 @@ if(isset($_POST['upload_form'])) {
 						if (response.convertingstatus == 'failed') {
 							return status.html('<p style="text-align:center;width:100%;font-size:21px;font-weight:600px;">Failed: ' + fileName + ' has failed the conversion :(</p>');
 						} else {
-							return status.html('<a class="download" href="' + response.convertedvideo + '" download="' + response.ipfsname + '"><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" target="_blank"><button>Open video in a new tab</button></a>');
+							return status.html('<a class="download" href="' + decodeURIComponent(response.convertedvideo) + '" download="' + decodeURIComponent(response.ipfsname) + '"><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + decodeURIComponent(response.ipfsname) + '" target="_blank"><button>Open video in a new tab</button></a>');
 						}
 					} catch(e) {
 						interval = setInterval(getConvertingStatus, 5000);
@@ -227,7 +235,7 @@ if(isset($_POST['upload_form'])) {
 						if (response.convertingstatus == 'done') {
 							$('#percent').css('display', 'none');
 							clearInterval(interval);
-							return status.html('<a class="download" href="' + response.convertedvideo + '" download="' + response.ipfsname + '"><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + response.ipfsname + '" target="_blank"><button>Open video in a new tab</button></a>');
+							return status.html('<a class="download" href="' + decodeURIComponent(response.convertedvideo) + '" download="' + decodeURIComponent(response.ipfsname) + '"><button>Download Video</button></a><br/><br/><a class="download" href="https://ipfs.infura.io/ipfs/' + response.ipfshash + '?filename=' + decodeURIComponent(response.ipfsname) + '" target="_blank"><button>Open video in a new tab</button></a>');
 						} else if (response.convertingstatus == 'converting') {
 							console.log('Still converting...');
 						} else if (response.convertingstatus == 'uploading_to_ipfs') {
